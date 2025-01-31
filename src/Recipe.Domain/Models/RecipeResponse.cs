@@ -1,6 +1,6 @@
-﻿namespace Recipe.Core;
+﻿namespace Recipe.Core.Models;
 
-public class Recipe
+public class RecipeResponse
 {
     public string Name { get; set; }
     public IEnumerable<Image> Images { get; set; }

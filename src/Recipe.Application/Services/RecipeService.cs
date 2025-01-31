@@ -1,4 +1,7 @@
-namespace Recipe.Application;
+using Recipe.Application.Interfaces;
+using Recipe.Core.Models;
+
+namespace Recipe.Application.Services;
 
 public class RecipeService : IRecipeService
 {
@@ -9,7 +12,7 @@ public class RecipeService : IRecipeService
         _recipeRepository = recipeRepository;
     }
     
-    public Task<IEnumerable<Core.Recipe>> GetRecipesAsync()
+    public Task<IEnumerable<RecipeResponse>> GetRecipesAsync(RecipeRequest request)
     {
         return _recipeRepository.GetRecipesAsync();
     }
