@@ -16,7 +16,9 @@ internal class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
         builder.Services.AddScoped<IRecipeService, RecipeService>();
-        
+        builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
+
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
