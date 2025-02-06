@@ -19,9 +19,9 @@ namespace RecipeAPI.Controllers
 
         // GET: api/<RecipeController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<string>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return await Task.FromResult(new string[] { "Test", "value2" });
         }
 
         // GET api/<RecipeController>/5
@@ -35,7 +35,7 @@ namespace RecipeAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<RecipeResponse>> Post([FromBody] RecipeRequest request, CancellationToken ct)
         {
-            var response = await _recipeService.GetRecipesAsync(new RecipeRequest());
+            var response = await _recipeService.GetRecipesAsync(request);
 
             return Ok(response);
         }
