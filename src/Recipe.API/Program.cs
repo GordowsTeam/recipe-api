@@ -37,6 +37,8 @@ internal class Program
         .WithName("GetRecipe")
         .WithOpenApi();;
 
+        app.MapGet("/", () => "Hello from AWS Lambda");
+
         app.Run();
     }
 }
