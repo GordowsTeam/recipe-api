@@ -259,3 +259,12 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+
+# Solution-specific ignores
+/terraform/.terraform
+/terraform/terraform.exe
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate.backup
+terraform/terraform.tfstate
+terraform/recipe_api.zip
