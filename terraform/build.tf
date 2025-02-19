@@ -1,0 +1,21 @@
+resource "null_resource" "build_dotnet_lambda" {
+  provisioner "local-exec" {
+    command     = <<EOT
+      dotnet restore ../src/RecipeAPI/RecipeAPI.csproj
+      dotnet publish ../src/RecipeAPI/RecipeAPI.csproj -c Release -r linux-x64 --self-contained false -o ../RecipeAPI/publish
+    EOT
+    interpreter = ["PowerShell", "-Command"]
+  }
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+}
+
+
+## Archiving the Artifacts
+data "archive_file" "lambda" {
+  type        = "zip"
+  source_dir  = "../RecipeAPI/publish/"
+  output_path = "./recipe_api.zip"
+  depends_on  = [null_resource.build_dotnet_lambda]
+}
