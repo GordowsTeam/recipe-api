@@ -268,3 +268,6 @@ terraform/.terraform.lock.hcl
 terraform/terraform.tfstate.backup
 terraform/terraform.tfstate
 terraform/recipe_api.zip
+terraform/api-gateway/.terraform.lock.hcl
+terraform/api-gateway/.terraform/providers/registry.terraform.io/hashicorp/aws/5.81.0/windows_386/LICENSE.txt
+terraform/api-gateway/.terraform/providers/registry.terraform.io/hashicorp/aws/5.81.0/windows_386/terraform-provider-aws_v5.81.0_x5.exe
