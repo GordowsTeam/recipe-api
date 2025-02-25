@@ -12,7 +12,7 @@ provider "aws" {
   region = var.region
   default_tags {
     tags = {
-      Environment = "staging"
+      Environment = var.environment_name
       Owner       = "Alberto Garcia"
       Project     = "recipe"
     }

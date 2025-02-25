@@ -10,14 +10,14 @@ variable "recipe_api_name" {
   default     = "recipe-api"
 }
 
-variable "stage_name" {
+variable "environment_name" {
   description = "The name of your API stage"
   type        = string
-  default     = "stage"
+  default     = "test"
 }
 
 variable "account_id" {
-  default   = "5555"
+  default   = ""
   type      = string
   sensitive = true
 }

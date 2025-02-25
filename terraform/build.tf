@@ -3,7 +3,7 @@ locals {
   is_windows = substr(pathexpand("~"), 0, 1) == "/" ? false : true
 }
 
-resource "null_resource" "build_dotnet_lambda" {
+resource "null_resource" "build-dotnet-lambda" {
   provisioner "local-exec" {
     command     = <<EOT
       dotnet restore ../src/RecipeAPI/RecipeAPI.csproj
@@ -18,9 +18,9 @@ resource "null_resource" "build_dotnet_lambda" {
 
 
 ## Archiving the Artifacts
-data "archive_file" "lambda" {
+data "archive_file" "archive-lambda" {
   type        = "zip"
   source_dir  = "../RecipeAPI/publish/"
   output_path = "./recipe_api.zip"
-  depends_on  = [null_resource.build_dotnet_lambda]
+  depends_on  = [null_resource.build-dotnet-lambda]
 }

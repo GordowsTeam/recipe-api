@@ -2,7 +2,7 @@
 ## AWS api gateway
 resource "aws_api_gateway_rest_api" "recipe-api" {
   name = "${var.recipe_api_name}"
-  description = "My Recipe API Gateway"
+  description = "Recipe API Gateway"
   endpoint_configuration {
     types = ["REGIONAL"]
   }
@@ -81,8 +81,8 @@ resource "aws_api_gateway_deployment" "recipe-deployment" {
   }
 }
 
-resource "aws_api_gateway_stage" "stage" {
+resource "aws_api_gateway_stage" "environment" {
   deployment_id = aws_api_gateway_deployment.recipe-deployment.id
   rest_api_id   = aws_api_gateway_rest_api.recipe-api.id
-  stage_name    = "${var.stage_name}"
+  stage_name    = "${var.environment_name}"
 }

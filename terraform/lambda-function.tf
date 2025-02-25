@@ -1,12 +1,12 @@
 ## AWS Lambda Resources
 resource "aws_lambda_function" "recipe-lambda-function" {
   filename         = "recipe_api.zip"
-  function_name    = "Recipe_API"
-  role             = aws_iam_role.lambda_role.arn
+  function_name    = "recipe-api-lambda"
+  role             = aws_iam_role.lambda-role.arn
   handler          = "RecipeAPI::RecipeAPI.LambdaEntryPoint::FunctionHandlerAsync"
-  source_code_hash = data.archive_file.lambda.output_base64sha256
+  source_code_hash = data.archive_file.archive-lambda.output_base64sha256
   runtime          = "dotnet8"
-  depends_on       = [data.archive_file.lambda]
+  depends_on       = [data.archive_file.archive-lambda]
   environment {
     variables = {
       ASPNETCORE_ENVIRONMENT = "Development"
@@ -14,7 +14,7 @@ resource "aws_lambda_function" "recipe-lambda-function" {
   }
 }
 
-resource "aws_iam_role" "lambda_role" {
+resource "aws_iam_role" "lambda-role" {
   name = "lambda-role"
 
   assume_role_policy = jsonencode({
@@ -27,14 +27,12 @@ resource "aws_iam_role" "lambda_role" {
         Service = "lambda.amazonaws.com"
       }
     }
-  ]
-})
+  ]})
 }
 
-
-resource "aws_iam_role_policy_attachment" "lambda_basic" {
+resource "aws_iam_role_policy_attachment" "lambda-policy-attachment" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  role = aws_iam_role.lambda_role.name
+  role = aws_iam_role.lambda-role.name
 }
 
 ## Lambda Permissions
