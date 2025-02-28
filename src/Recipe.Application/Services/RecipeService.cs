@@ -6,14 +6,18 @@ namespace Recipe.Application.Services;
 public class RecipeService : IRecipeService
 {
     private readonly IRecipeRepository _recipeRepository;
+    private readonly IThirdPartyRecipeService _thirdPartyService;
 
-    public RecipeService(IRecipeRepository recipeRepository)
+    public RecipeService(IRecipeRepository recipeRepository, IThirdPartyRecipeService thirdPartyService)
     {
         _recipeRepository = recipeRepository;
+        _thirdPartyService = thirdPartyService;
     }
     
-    public Task<IEnumerable<RecipeResponse>> GetRecipesAsync(RecipeRequest request)
+    public async Task<IEnumerable<RecipeResponse>> GetRecipesAsync(RecipeRequest request)
     {
-        return _recipeRepository.GetRecipesAsync();
+        var thirdPartyData = await _thirdPartyService.GetRecipesAsync();
+
+        return await _recipeRepository.GetRecipesAsync();
     }
 }

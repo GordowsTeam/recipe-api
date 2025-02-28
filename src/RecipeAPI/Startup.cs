@@ -17,8 +17,10 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
 
+        services.AddHttpClient<EdamameRecipeService>("EdamameAPI");
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeService, RecipeService>();
+        services.AddScoped<IThirdPartyRecipeService, EdamameRecipeService>();
         services.AddControllers();
     }
 
