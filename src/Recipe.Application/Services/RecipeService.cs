@@ -1,3 +1,4 @@
+using System.Linq;
 using Recipe.Application.Interfaces;
 using Recipe.Core.Models;
 
@@ -16,8 +17,10 @@ public class RecipeService : IRecipeService
     
     public async Task<IEnumerable<RecipeResponse>> GetRecipesAsync(RecipeRequest request)
     {
-        var thirdPartyData = await _thirdPartyService.GetRecipesAsync();
+        var result = new List<RecipeResponse>();
+        result.AddRange(await _recipeRepository.GetRecipesAsync() ?? []);
+        result.AddRange(await _thirdPartyService.GetRecipesAsync() ?? []);
 
-        return await _recipeRepository.GetRecipesAsync();
+        return result;
     }
 }
