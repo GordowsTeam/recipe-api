@@ -16,7 +16,19 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddCors(options =>
+        {
+            options.AddPolicy("ProdCorsPolicy", builder =>
+                builder.WithOrigins("https://*.oursite.com", "https://*.anothersite.com")
+                    .SetIsOriginAllowedToAllowWildcardSubdomains()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
 
+            options.AddPolicy("NonProdCorsPolicy", builder =>
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+        });
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeService, RecipeService>();
         services.AddControllers();
@@ -29,10 +41,12 @@ public class Startup
         {
             app.UseDeveloperExceptionPage();
         }
-
+        
         app.UseHttpsRedirection();
 
         app.UseRouting();
+
+        app.UseCors(env.IsProduction() ? "ProdCorsPolicy" : "NonProdCorsPolicy");
 
         app.UseAuthorization();
 
