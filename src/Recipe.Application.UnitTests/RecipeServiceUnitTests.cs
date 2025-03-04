@@ -22,13 +22,15 @@ namespace Recipe.UnitTests
         {
             //Arrange
             var recipeService = new RecipeService(_mockRecipeRepository.Object, _mockThirdPartyService.Object);
+            var request = new RecipeRequest();
 
             //Act
-            var recipes = await recipeService.GetRecipesAsync(new RecipeRequest());
+            var recipes = await recipeService.GetRecipesAsync(request);
 
             //Asserts
-            recipes.ShouldBeOfType<RecipeResponse[]>();
-            _mockRecipeRepository.Verify(v => v.GetRecipesAsync(new RecipeRequest()), Times.Once);
+            recipes.ShouldBeOfType<List<RecipeResponse>>();
+            _mockRecipeRepository.Verify(v => v.GetRecipesAsync(request), Times.Once);
+            _mockThirdPartyService.Verify(v => v.GetRecipesAsync(request), Times.Once);
         }
     }
 }

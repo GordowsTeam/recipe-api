@@ -18,8 +18,17 @@ public class RecipeService : IRecipeService
     public async Task<IEnumerable<RecipeResponse>> GetRecipesAsync(RecipeRequest request)
     {
         var result = new List<RecipeResponse>();
-        result.AddRange(await _recipeRepository.GetRecipesAsync(request) ?? []);
-        result.AddRange(await _thirdPartyService.GetRecipesAsync(request) ?? []);
+        var recipesFromDB = await _recipeRepository.GetRecipesAsync(request);
+        if (recipesFromDB != null) 
+        {
+            result.AddRange(recipesFromDB);
+        }
+
+        var recipesFromThirdParty = await _thirdPartyService.GetRecipesAsync(request);
+        if (recipesFromThirdParty != null) 
+        {
+            result.AddRange(recipesFromThirdParty);
+        }
 
         return result;
     }
