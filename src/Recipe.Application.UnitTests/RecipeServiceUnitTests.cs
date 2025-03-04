@@ -28,7 +28,7 @@ namespace Recipe.UnitTests
 
             //Asserts
             recipes.ShouldBeOfType<RecipeResponse[]>();
-            _mockRecipeRepository.Verify(v => v.GetRecipesAsync(), Times.Once);
+            _mockRecipeRepository.Verify(v => v.GetRecipesAsync(new RecipeRequest()), Times.Once);
         }
     }
 }

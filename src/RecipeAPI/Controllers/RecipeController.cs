@@ -35,6 +35,7 @@ namespace RecipeAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<RecipeResponse>> Post([FromBody] RecipeRequest request, CancellationToken ct)
         {
+            //TODO: validate request
             var response = await _recipeService.GetRecipesAsync(request);
 
             return Ok(response);
