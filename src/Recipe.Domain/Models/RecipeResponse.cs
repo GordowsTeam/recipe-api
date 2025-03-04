@@ -29,7 +29,7 @@ public class Image
 public class Ingredient
 {
     public string Text { get; set; }//TODO: Change for Name
-    public string Quantity { get; set; }
+    public decimal Quantity { get; set; }
     public string Measure { get; set; }
     public decimal Weight { get; set; }
     public string Food { get; set; }

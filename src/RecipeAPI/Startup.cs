@@ -16,6 +16,7 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddHttpClient<EdamameRecipeService>("EdamameAPI");
         services.AddCors(options =>
         {
             options.AddPolicy("ProdCorsPolicy", builder =>
@@ -31,6 +32,9 @@ public class Startup
         });
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeService, RecipeService>();
+        services.AddScoped<IThirdPartyRecipeService, EdamameRecipeService>();
+        services.Configure<EdamameAPISettings>(Configuration.GetSection("EdamameAPISettings"));
+        services.AddSingleton<EdamameAPISettings>();
         services.AddControllers();
     }
 
