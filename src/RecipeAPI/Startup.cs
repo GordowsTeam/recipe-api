@@ -21,6 +21,8 @@ public class Startup
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeService, RecipeService>();
         services.AddScoped<IThirdPartyRecipeService, EdamameRecipeService>();
+        services.Configure<EdamameAPISettings>(Configuration.GetSection("EdamameAPISettings"));
+        services.AddSingleton<EdamameAPISettings>();
         services.AddControllers();
     }
 

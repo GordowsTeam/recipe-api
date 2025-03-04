@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Microsoft.Extensions.Options;
 using Recipe.Application.Interfaces;
 using Recipe.Core.Models;
 
@@ -8,11 +9,13 @@ public class EdamameRecipeService: IThirdPartyRecipeService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly JsonSerializerOptions _jsonOptionSerialier;
+    private readonly EdamameAPISettings _edamameApiSettings;
 
-    public EdamameRecipeService(IHttpClientFactory httpClientFactory)
+    public EdamameRecipeService(IHttpClientFactory httpClientFactory, IOptions<EdamameAPISettings> edamameApiSettings)
     {
         _httpClientFactory = httpClientFactory;
         _jsonOptionSerialier = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+        _edamameApiSettings = edamameApiSettings.Value;
     }
 
     public async Task<IEnumerable<RecipeResponse>?> GetRecipesAsync(RecipeRequest request)
@@ -22,7 +25,7 @@ public class EdamameRecipeService: IThirdPartyRecipeService
             var httpClient = _httpClientFactory.CreateClient("EdamameAPI");
             httpClient.BaseAddress = new Uri("https://api.edamam.com/");
 
-            var response = await httpClient.GetAsync($"api/recipes/v2?type=public&beta=true&q={string.Join("", request.Ingredients)}&app_id=59d21aad&app_key=78c368f91093e7706550971359692a05");
+            var response = await httpClient.GetAsync($"api/recipes/v2?type=public&beta=true&q={string.Join("", request.Ingredients)}&app_id={_edamameApiSettings.AppId}&app_key={_edamameApiSettings.AppKey}");
             var responseBody = await response.Content.ReadAsStringAsync();
 
             if (response.IsSuccessStatusCode)
@@ -40,6 +43,12 @@ public class EdamameRecipeService: IThirdPartyRecipeService
             return null;
         }
     }
+}
+
+public class EdamameAPISettings 
+{
+    public string AppId { get; set; }
+    public string AppKey { get; set; }
 }
 
 public class EdamameRecipeResponse 
