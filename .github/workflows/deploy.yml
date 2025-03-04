@@ -57,15 +57,15 @@ jobs:
           
       - name: Verify appsettings.json Exists
         run: |
-          if [ ! -f src/RecipeAPI/appsettings.json ]; then
+          if [ ! -f $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json ]; then
             echo "Error: appsettings.json not found!"
             exit 1
           fi
 
       - name: Replace settings in appsettings.json
         run: |
-          sed -i 's|__APP-ID__|${{ secrets.EDAMAME_APP_ID }}|g' src/RecipeAPI/appsettings.json
-          sed -i 's|__APP-KEY__|${{ secrets.EDAMAME_APP_KEY }}|g' src/RecipeAPI/appsettings.json
+          sed -i 's|__APP-ID__|${{ secrets.EDAMAME_APP_ID }}|g' $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json
+          sed -i 's|__APP-KEY__|${{ secrets.EDAMAME_APP_KEY }}|g' $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json
 
       - name: Terraform Init
         id: init
