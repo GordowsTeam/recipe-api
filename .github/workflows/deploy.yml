@@ -40,6 +40,12 @@ jobs:
         with:
           terraform_version: 1.10.2
           terraform_wrapper: false
+      
+      - name: Replace APP ID in appsettings.json
+        run: sed -i 's|__APP-ID__|${{ secrets.EDAMAME_APP_ID }}|g' appsettings.json
+
+      - name: Replace APP KEY in appsettings.json
+        run: sed -i 's|__APP-KEY__|${{ secrets.EDAMAME_APP_KEY }}|g' appsettings.json
 
       - name: Terraform Init
         id: init
