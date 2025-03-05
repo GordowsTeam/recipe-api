@@ -1,6 +1,7 @@
 ﻿using Recipe.Application.Interfaces;
 using Recipe.Application.Services;
 using Recipe.Infrastructure.Services;
+using Recipe.Infrastructure.Services.Edamame;
 
 namespace RecipeAPI;
 
