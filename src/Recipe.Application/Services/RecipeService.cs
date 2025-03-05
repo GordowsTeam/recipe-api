@@ -8,11 +8,13 @@ public class RecipeService : IRecipeService
 {
     private readonly IRecipeRepository _recipeRepository;
     private readonly IThirdPartyRecipeService _thirdPartyService;
+    private readonly string _useThirdPartyServices;
 
     public RecipeService(IRecipeRepository recipeRepository, IThirdPartyRecipeService thirdPartyService)
     {
         _recipeRepository = recipeRepository;
         _thirdPartyService = thirdPartyService;
+        _useThirdPartyServices = Environment.GetEnvironmentVariable("EDAMAME_API_ACTIVE") ?? "false";
     }
     
     public async Task<IEnumerable<RecipeResponse>> GetRecipesAsync(RecipeRequest request)
@@ -24,10 +26,14 @@ public class RecipeService : IRecipeService
             result.AddRange(recipesFromDB);
         }
 
-        var recipesFromThirdParty = await _thirdPartyService.GetRecipesAsync(request);
-        if (recipesFromThirdParty != null) 
+
+        if (_useThirdPartyServices == "true")
         {
-            result.AddRange(recipesFromThirdParty);
+            var recipesFromThirdParty = await _thirdPartyService.GetRecipesAsync(request);
+            if (recipesFromThirdParty != null)
+            {
+                result.AddRange(recipesFromThirdParty);
+            }
         }
 
         return result;

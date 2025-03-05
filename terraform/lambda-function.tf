@@ -10,6 +10,7 @@ resource "aws_lambda_function" "recipe-lambda-function" {
   environment {
     variables = {
       ASPNETCORE_ENVIRONMENT = "Development"
+      EDAMAME_API_ACTIVE = "false"
     }
   }
 }
