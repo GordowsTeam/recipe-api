@@ -34,7 +34,6 @@ public class EdamameRecipeService : IThirdPartyRecipeService
                 $"&q={string.Join("", request.Ingredients)}" +
                 $"&app_id={_edamameApiSettings.AppId}" +
                 $"&app_key={_edamameApiSettings.AppKey}";
-            _logger.LogInformation($"Request URI: {requestUri}");
             var response = await httpClient.GetAsync(requestUri);
             var responseBody = await response.Content.ReadAsStringAsync();
 
