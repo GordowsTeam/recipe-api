@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Recipe.Application.Interfaces;
 using Recipe.Core.Models;
@@ -10,13 +11,15 @@ public class EdamameRecipeService : IThirdPartyRecipeService
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly JsonSerializerOptions _jsonOptionSerialier;
     private readonly EdamameAPISettings _edamameApiSettings;
+    private readonly ILogger<EdamameRecipeService> _logger;
     private const string endpointUri = "api/recipes/v2";
 
-    public EdamameRecipeService(IHttpClientFactory httpClientFactory, IOptions<EdamameAPISettings> edamameApiSettings)
+    public EdamameRecipeService(IHttpClientFactory httpClientFactory, IOptions<EdamameAPISettings> edamameApiSettings, ILogger<EdamameRecipeService> logger)
     {
         _httpClientFactory = httpClientFactory;
         _jsonOptionSerialier = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
         _edamameApiSettings = edamameApiSettings.Value;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<RecipeResponse>?> GetRecipesAsync(RecipeRequest request)
@@ -25,13 +28,13 @@ public class EdamameRecipeService : IThirdPartyRecipeService
         {
             var httpClient = _httpClientFactory.CreateClient("EdamameAPI");
             httpClient.BaseAddress = new Uri(_edamameApiSettings.Uri);
-
-            var response = await httpClient.GetAsync($"{endpointUri}?" +
+            var requestUri = $"{endpointUri}?" +
                 $"type={_edamameApiSettings.Type}" +
                 $"&beta={_edamameApiSettings.Beta}" +
                 $"&q={string.Join("", request.Ingredients)}" +
                 $"&app_id={_edamameApiSettings.AppId}" +
-                $"&app_key={_edamameApiSettings.AppKey}");
+                $"&app_key={_edamameApiSettings.AppKey}";
+            var response = await httpClient.GetAsync(requestUri);
             var responseBody = await response.Content.ReadAsStringAsync();
 
             if (response.IsSuccessStatusCode)
@@ -45,12 +48,12 @@ public class EdamameRecipeService : IThirdPartyRecipeService
         }
         catch (HttpRequestException e)
         {
-            Console.WriteLine($"Request error: {e.Message}");
+            _logger.LogError($"Request error in Edamame API Service: {e.Message}");
             return null;
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Exception: {e.Message}");
+            _logger.LogError($"There was an exception while trying to consume Edamame API Services. Error: {e.Message}");
             return null;
         }
     }

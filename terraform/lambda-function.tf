@@ -7,9 +7,11 @@ resource "aws_lambda_function" "recipe-lambda-function" {
   source_code_hash = data.archive_file.archive-lambda.output_base64sha256
   runtime          = "dotnet8"
   depends_on       = [data.archive_file.archive-lambda]
+  timeout          = 30
   environment {
     variables = {
       ASPNETCORE_ENVIRONMENT = "Development"
+      EDAMAME_API_ACTIVE = "false"
     }
   }
 }
