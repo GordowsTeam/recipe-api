@@ -1,4 +1,5 @@
-﻿using Recipe.Application.Interfaces;
+﻿using AWS.Logger;
+using Recipe.Application.Interfaces;
 using Recipe.Application.Services;
 using Recipe.Infrastructure.Services;
 using Recipe.Infrastructure.Services.Edamame;
@@ -17,7 +18,20 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddHttpClient<EdamameRecipeService>("EdamameAPI");
+        services.AddHttpClient<EdamameRecipeService>("EdamameAPI", client => 
+        {
+            client.Timeout = TimeSpan.FromSeconds(10);
+        });
+
+        services.AddLogging(logging =>
+        {
+            logging.AddAWSProvider(new AWSLoggerConfig
+            {
+                LogGroup = "recipe-logs",
+                Region = "us-east-1"//TODO: remove this hardcoded
+            });
+        });
+
         services.AddCors(options =>
         {
             options.AddPolicy("ProdCorsPolicy", builder =>
