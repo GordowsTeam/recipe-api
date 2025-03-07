@@ -37,7 +37,7 @@ namespace RecipeAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<RecipeResponse>> Post([FromBody] RecipeRequest request, CancellationToken ct)
         {
-            if (request == null || request.Ingredients == null || !request.Ingredients.Any())
+            if (request == null || request.Ingredients == null || !request.Ingredients.Any() || request.Ingredients.Any(l => string.IsNullOrEmpty(l)))
             {
                 return BadRequest("Invalid request. Ingredients are required.");
             }

@@ -1,4 +1,3 @@
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Recipe.Application.Constants;
 using Recipe.Application.Interfaces;
@@ -25,7 +24,7 @@ public class RecipeService : IRecipeService
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        if (request.Ingredients == null || !request.Ingredients.Any())
+        if (request.Ingredients == null || !request.Ingredients.Any() || request.Ingredients.Any(l => string.IsNullOrEmpty(l)))
         {
             throw new ArgumentException("Ingredients cannot be null or empty", nameof(request.Ingredients));
         }
