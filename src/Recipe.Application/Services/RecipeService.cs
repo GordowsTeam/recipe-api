@@ -10,14 +10,12 @@ public class RecipeService : IRecipeService
 {
     private readonly IRecipeRepository _recipeRepository;
     private readonly IThirdPartyRecipeService _thirdPartyService;
-    private readonly string _useThirdPartyServices;
     private readonly ILogger<RecipeService> _logger;
 
     public RecipeService(IRecipeRepository recipeRepository, IThirdPartyRecipeService thirdPartyService, ILogger<RecipeService> logger)
     {
         _recipeRepository = recipeRepository;
         _thirdPartyService = thirdPartyService;
-        _useThirdPartyServices = Environment.GetEnvironmentVariable(Common.EDAMAME_API_ACTIVE) ?? "false";
         _logger = logger;
     }
     
@@ -32,7 +30,7 @@ public class RecipeService : IRecipeService
         }
 
 
-        if (_useThirdPartyServices == "true")
+        if (Environment.GetEnvironmentVariable(Common.EDAMAME_API_ACTIVE) == "true")
         {
             var recipesFromThirdParty = await _thirdPartyService.GetRecipesAsync(request);
             if (recipesFromThirdParty != null)
