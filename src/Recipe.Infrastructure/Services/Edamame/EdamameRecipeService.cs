@@ -31,7 +31,7 @@ public class EdamameRecipeService : IThirdPartyRecipeService
             var requestUri = $"{endpointUri}?" +
                 $"type={_edamameApiSettings.Type}" +
                 $"&beta={_edamameApiSettings.Beta}" +
-                $"&q={string.Join("", request.Ingredients)}" +
+                $"&q={string.Join("", request.Ingredients ?? [])}" +
                 $"&app_id={_edamameApiSettings.AppId}" +
                 $"&app_key={_edamameApiSettings.AppKey}";
             var response = await httpClient.GetAsync(requestUri);
@@ -57,15 +57,6 @@ public class EdamameRecipeService : IThirdPartyRecipeService
             return null;
         }
     }
-}
-
-public class EdamameAPISettings
-{
-    public required string AppId { get; set; }
-    public required string AppKey { get; set; }
-    public string Uri { get; set; } = "https://api.edamam.com/";
-    public string Beta { get; set; } = "true";
-    public string Type { get; set; } = "public";
 }
 
 public record EdamameRecipeResponse(Source[]? Hits);

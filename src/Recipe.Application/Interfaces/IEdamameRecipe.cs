@@ -9,6 +9,6 @@ namespace Recipe.Application.Interfaces
 {
     public interface IThirdPartyRecipeService
     {
-        Task<IEnumerable<RecipeResponse?>> GetRecipesAsync(RecipeRequest request);
+        Task<IEnumerable<RecipeResponse>?> GetRecipesAsync(RecipeRequest request);
     }
 }

@@ -32,10 +32,10 @@ resource "aws_iam_role" "lambda-role" {
   ]})
 }
 
-resource "aws_iam_role_policy_attachment" "lambda-policy-attachment" {
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  role = aws_iam_role.lambda-role.name
-}
+# resource "aws_iam_role_policy_attachment" "lambda-policy-attachment" {
+#   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+#   role = aws_iam_role.lambda-role.name
+# }
 
 ## Lambda Permissions
 resource "aws_lambda_permission" "apigw-lambda" {
@@ -45,3 +45,25 @@ resource "aws_lambda_permission" "apigw-lambda" {
   principal     = "apigateway.amazonaws.com"
   source_arn = "${aws_api_gateway_rest_api.recipe-api.execution_arn}/*/*/*"
  }
+
+resource "aws_iam_policy" "lambda_logging_policy" {
+  name = "lambda_logging_policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ]
+      Resource = "arn:aws:logs:*:*:*"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_logging_attach" {
+  role       = aws_iam_role.lambda-role.name
+  policy_arn = aws_iam_policy.lambda_logging_policy.arn
+}

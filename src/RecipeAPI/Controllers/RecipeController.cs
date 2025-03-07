@@ -11,10 +11,12 @@ namespace RecipeAPI.Controllers
     public class RecipeController : ControllerBase
     {
         private readonly IRecipeService _recipeService;
+        private readonly ILogger<RecipeController> _logger;
 
-        public RecipeController(IRecipeService recipeService)
+        public RecipeController(IRecipeService recipeService, ILogger<RecipeController> logger)
         {
             _recipeService = recipeService;
+            _logger = logger;
         }
 
         // GET: api/<RecipeController>
@@ -35,10 +37,27 @@ namespace RecipeAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<RecipeResponse>> Post([FromBody] RecipeRequest request, CancellationToken ct)
         {
-            //TODO: validate request
-            var response = await _recipeService.GetRecipesAsync(request);
+            if (request == null || request.Ingredients == null || !request.Ingredients.Any() || request.Ingredients.Any(l => string.IsNullOrEmpty(l)))
+            {
+                return BadRequest("Invalid request. Ingredients are required.");
+            }
 
-            return Ok(response);
+            try
+            {
+                var response = await _recipeService.GetRecipesAsync(request);
+                return Ok(response);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, "Invalid request. Ingredients are required.");
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while processing the request.");
+                // Log the exception (logging mechanism not shown here)
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         // PUT api/<RecipeController>/5

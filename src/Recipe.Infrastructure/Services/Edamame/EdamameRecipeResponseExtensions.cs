@@ -2,7 +2,7 @@
 
 namespace Recipe.Infrastructure.Services.Edamame;
 
-public static class MapToRecipeResponse
+public static class EdamameRecipeResponseExtensions
 {
     public static IEnumerable<RecipeResponse> Map(this EdamameRecipeResponse response)
     {
