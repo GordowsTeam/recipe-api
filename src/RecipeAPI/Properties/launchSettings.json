@@ -4,7 +4,8 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "EDAMAME_API_ACTIVE":"true"
       },
       "applicationUrl": "https://localhost:56548;http://localhost:56549"
     }

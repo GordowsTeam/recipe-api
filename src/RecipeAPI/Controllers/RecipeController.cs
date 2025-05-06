@@ -28,9 +28,11 @@ namespace RecipeAPI.Controllers
 
         // GET api/<RecipeController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<RecipeResponse>> Get(int id, [FromQuery] string? externalProvider = null)
         {
-            return "value";
+            var response = await _recipeService.GetRecipeByIdAsync(id, externalProvider);
+
+            return Ok(response);
         }
 
         // POST api/<RecipeController>

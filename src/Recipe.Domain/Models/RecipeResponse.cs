@@ -1,7 +1,9 @@
-﻿namespace Recipe.Core.Models;
+﻿using Recipe.Core.Enums;
+namespace Recipe.Core.Models;
 
 public class RecipeResponse
 {
+    public int Id { get; set; }
     public required string Name { get; set; }
     public IEnumerable<Image>? Images { get; set; }
     public IEnumerable<Ingredient>? Ingredients { get; set; }
@@ -11,4 +13,5 @@ public class RecipeResponse
     public IEnumerable<string>? CuisinTypes { get; set; }
     public IEnumerable<string>? MealTypes { get; set; }
     public IEnumerable<Direction>? Directions { get; set; }
+    public ExternalProvider ExternalProvider { get; set; }
 }

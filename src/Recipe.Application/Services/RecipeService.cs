@@ -22,6 +22,7 @@ public class RecipeService : IRecipeService
     
     public async Task<IEnumerable<RecipeResponse>> GetRecipesAsync(RecipeRequest request)
     {
+        //TODO: add a factory to get recipes from DB or externalProviders
         ArgumentNullException.ThrowIfNull(request);
 
         if (request.Ingredients == null || !request.Ingredients.Any() || request.Ingredients.Any(l => string.IsNullOrEmpty(l)))
@@ -36,6 +37,13 @@ public class RecipeService : IRecipeService
         }
 
         await AddThirdPartyRecipesAsync(request, result);
+
+        return result;
+    }
+
+    public async Task<RecipeResponse> GetRecipeByIdAsync(int id, string externalProviderId)
+    {
+        var result = await _recipeRepository.GetRecipeByIdAsync(id, externalProviderId);
 
         return result;
     }
