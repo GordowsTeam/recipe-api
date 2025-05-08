@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Recipe.Application.Interfaces;
 using Recipe.Core.Models;
+using Recipe.Core.Enums;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,12 +12,12 @@ namespace RecipeAPI.Controllers
     [ApiController]
     public class RecipeController : ControllerBase
     {
-        private readonly IRecipeService _recipeService;
+        private readonly IRecipeSearchUseCase _recipeSearchUseCase;
         private readonly ILogger<RecipeController> _logger;
 
-        public RecipeController(IRecipeService recipeService, ILogger<RecipeController> logger)
+        public RecipeController(IRecipeSearchUseCase recipeSearchUseCase, ILogger<RecipeController> logger)
         {
-            _recipeService = recipeService;
+            _recipeSearchUseCase = recipeSearchUseCase;
             _logger = logger;
         }
 
@@ -30,9 +32,7 @@ namespace RecipeAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<RecipeResponse>> Get(int id, [FromQuery] string? externalProvider = null)
         {
-            var response = await _recipeService.GetRecipeByIdAsync(id, externalProvider);
-
-            return Ok(response);
+            throw new NotImplementedException();
         }
 
         // POST api/<RecipeController>
@@ -44,10 +44,21 @@ namespace RecipeAPI.Controllers
                 return BadRequest("Invalid request. Ingredients are required.");
             }
 
+            var recipeResponse = new List<RecipeResponse>();
             try
-            {
-                var response = await _recipeService.GetRecipesAsync(request);
-                return Ok(response);
+            {    
+                foreach(RecipeSourceType recipeSourceType in Enum.GetValues(typeof(RecipeSourceType)))
+                {
+                    if(Environment.GetEnvironmentVariable($"{recipeSourceType.ToString().ToLower()}_active") != "true")
+                    {
+                        continue;
+                    }
+                    var response = await _recipeSearchUseCase.ExecuteAsync(request, recipeSourceType);
+                    
+                    recipeResponse.AddRange(response);
+                }
+                
+                return Ok(recipeResponse);
             }
             catch (ArgumentException ex)
             {

@@ -3,8 +3,7 @@ using Recipe.Core.Enums;
 using Recipe.Core.Models;
 
 namespace Recipe.Infrastructure.Services;
-
-public class MockRecipeRepository : IRecipeRepository
+public class MockRecipeRepository : IRecipeService
 {
     public Task<IEnumerable<RecipeResponse>> GetRecipesAsync(RecipeRequest request)
     {
@@ -23,7 +22,7 @@ public class MockRecipeRepository : IRecipeRepository
         return Task.FromResult<IEnumerable<RecipeResponse>>(recipes);
     }
 
-    public Task<RecipeResponse> GetRecipeByIdAsync(int id, string externalProvider)
+    public Task<RecipeResponse> GetRecipeByIdAsync(int id, RecipeSourceType externalProvider)
     {
         var recipe = new RecipeResponse ()
         {

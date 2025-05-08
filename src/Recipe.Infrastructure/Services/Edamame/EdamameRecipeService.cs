@@ -1,12 +1,13 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Recipe.Application.Interfaces;
 using Recipe.Core.Models;
+using Recipe.Core.Enums;
 
 namespace Recipe.Infrastructure.Services.Edamame;
-
-public class EdamameRecipeService : IThirdPartyRecipeService
+public class EdamameRecipeService: IRecipeService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly JsonSerializerOptions _jsonOptionSerialier;
@@ -56,6 +57,11 @@ public class EdamameRecipeService : IThirdPartyRecipeService
             _logger.LogError($"There was an exception while trying to consume Edamame API Services. Error: {e.Message}");
             return null;
         }
+    }
+
+    public Task<RecipeResponse> GetRecipeByIdAsync(int id, RecipeSourceType recipeSourceType)
+    {
+        throw new NotImplementedException();
     }
 }
 

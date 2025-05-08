@@ -43,9 +43,11 @@ public class Startup
                     .AllowAnyMethod()
                     .AllowAnyHeader());
         });
-        services.AddScoped<IRecipeRepository, MockRecipeRepository>();
-        services.AddScoped<IRecipeService, RecipeService>();
-        services.AddScoped<IThirdPartyRecipeService, EdamameRecipeService>();
+
+        services.AddScoped<MockRecipeRepository>();
+        services.AddScoped<EdamameRecipeService>();
+        services.AddScoped<IRecipeServiceFactory, RecipeServiceFactory>();
+        services.AddScoped<IRecipeSearchUseCase, RecipeSearchUseCase>();
         services.Configure<EdamameAPISettings>(Configuration.GetSection("EdamameAPISettings"));
         services.AddSingleton<EdamameAPISettings>();
         services.AddControllers();
