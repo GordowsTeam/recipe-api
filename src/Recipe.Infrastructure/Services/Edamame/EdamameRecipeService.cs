@@ -59,7 +59,7 @@ public class EdamameRecipeService: IRecipeService
         }
     }
 
-    public Task<RecipeResponse> GetRecipeByIdAsync(int id, RecipeSourceType recipeSourceType)
+    public Task<RecipeResponse> GetRecipeByIdAsync(string id)
     {
         throw new NotImplementedException();
     }

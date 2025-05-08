@@ -48,8 +48,11 @@ public class Startup
         services.AddScoped<EdamameRecipeService>();
         services.AddScoped<IRecipeServiceFactory, RecipeServiceFactory>();
         services.AddScoped<IRecipeSearchUseCase, RecipeSearchUseCase>();
+        services.AddScoped<IGetRecipeUseCase, GetRecipeUseCase>();
+
         services.Configure<EdamameAPISettings>(Configuration.GetSection("EdamameAPISettings"));
         services.AddSingleton<EdamameAPISettings>();
+        
         services.AddControllers();
     }
 

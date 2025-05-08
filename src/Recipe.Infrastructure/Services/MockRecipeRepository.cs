@@ -22,7 +22,7 @@ public class MockRecipeRepository : IRecipeService
         return Task.FromResult<IEnumerable<RecipeResponse>>(recipes);
     }
 
-    public Task<RecipeResponse> GetRecipeByIdAsync(int id, RecipeSourceType externalProvider)
+    public Task<RecipeResponse> GetRecipeByIdAsync(string id)
     {
         var recipe = new RecipeResponse ()
         {
