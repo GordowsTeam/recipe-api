@@ -72,6 +72,7 @@ namespace RecipeAPI.Controllers
             var recipeResponse = new List<RecipeResponse>();
             try
             {    
+                //TODO: move this code out of the try-catch
                 foreach(RecipeSourceType recipeSourceType in Enum.GetValues(typeof(RecipeSourceType)))
                 {
                     if(Environment.GetEnvironmentVariable($"{recipeSourceType.ToString().ToLower()}_active") != "true")

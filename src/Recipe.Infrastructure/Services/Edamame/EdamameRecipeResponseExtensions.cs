@@ -1,7 +1,7 @@
 ﻿using Recipe.Core.Models;
+using Recipe.Core.Enums;
 
 namespace Recipe.Infrastructure.Services.Edamame;
-
 public static class EdamameRecipeResponseExtensions
 {
     public static IEnumerable<RecipeResponse> Map(this EdamameRecipeResponse response)
@@ -26,8 +26,8 @@ public static class EdamameRecipeResponseExtensions
                 TotalTime = edamameRecipe.Recipe.TotalTime,
                 CuisinTypes = edamameRecipe.Recipe?.CuisineType == null ? [] : edamameRecipe.Recipe.CuisineType,
                 MealTypes = edamameRecipe.Recipe?.MealType ?? [],
-                Directions = []//TODO
-
+                Directions = [],//TODO
+                RecipeSourceType = RecipeSourceType.Edamame
             });
         }
         return result;

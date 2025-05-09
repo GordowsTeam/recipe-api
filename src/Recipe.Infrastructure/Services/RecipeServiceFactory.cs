@@ -4,6 +4,7 @@ using Recipe.Application.Interfaces;
 using Recipe.Core.Enums;
 using Microsoft.Extensions.DependencyInjection;
 using Recipe.Infrastructure.Services.Edamame;
+using Recipe.Infrastructure.Services.Spoonacular;
 
 namespace Recipe.Infrastructure.Services;
 public class RecipeServiceFactory: IRecipeServiceFactory 
@@ -20,6 +21,7 @@ public class RecipeServiceFactory: IRecipeServiceFactory
         return recipeSourceType switch {
             RecipeSourceType.Internal => _serviceProvider.GetRequiredService<MockRecipeRepository>(),
             RecipeSourceType.Edamame => _serviceProvider.GetRequiredService<EdamameRecipeService>(),
+            RecipeSourceType.Spoonacular => _serviceProvider.GetRequiredService<SpoonacularRecipeService>(),
             _ => throw new ArgumentException("unkown source type")
         };
     }

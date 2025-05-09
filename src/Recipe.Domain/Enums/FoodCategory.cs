@@ -4,10 +4,3 @@ public enum FoodCategory
 {
     None
 }
-
-public enum ExternalProvider 
-{
-    None,
-    Edamame,
-    Spoonacular
-}

@@ -1,6 +1,6 @@
 ﻿using Recipe.Core.Enums;
-namespace Recipe.Core.Models;
 
+namespace Recipe.Core.Models;
 public class RecipeResponse
 {
     public int Id { get; set; }
@@ -13,5 +13,5 @@ public class RecipeResponse
     public IEnumerable<string>? CuisinTypes { get; set; }
     public IEnumerable<string>? MealTypes { get; set; }
     public IEnumerable<Direction>? Directions { get; set; }
-    public ExternalProvider ExternalProvider { get; set; }
+    public RecipeSourceType RecipeSourceType { get; set; }
 }
