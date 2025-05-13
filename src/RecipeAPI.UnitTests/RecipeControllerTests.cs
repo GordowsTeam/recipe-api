@@ -33,7 +33,7 @@ namespace RecipeAPI.UnitTests
             var result = await _recipeController.Post(null, CancellationToken.None);
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<RecipeResponse>>(result);
+            var actionResult = Assert.IsType<ActionResult<RecipeListResponse>>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
             Assert.Equal("Invalid request. Ingredients are required.", badRequestResult.Value);
         }
@@ -48,7 +48,7 @@ namespace RecipeAPI.UnitTests
             var result = await _recipeController.Post(request, CancellationToken.None);
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<RecipeResponse>>(result);
+            var actionResult = Assert.IsType<ActionResult<RecipeListResponse>>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
             Assert.Equal("Invalid request. Ingredients are required.", badRequestResult.Value);
         }
@@ -63,7 +63,7 @@ namespace RecipeAPI.UnitTests
             var result = await _recipeController.Post(request, CancellationToken.None);
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<RecipeResponse>>(result);
+            var actionResult = Assert.IsType<ActionResult<RecipeListResponse>>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
             Assert.Equal("Invalid request. Ingredients are required.", badRequestResult.Value);
         }
@@ -73,9 +73,9 @@ namespace RecipeAPI.UnitTests
         {
             // Arrange
             var request = new RecipeRequest { Ingredients = new List<string> { "Tomato", "Cheese" } };
-            var response = new List<RecipeResponse>
+            var response = new List<RecipeListResponse>
             {
-                new RecipeResponse { Name = "Tomato Soup" }
+                new RecipeListResponse { Name = "Tomato Soup" }
             };
             _recipeServiceMock.Setup(service => service.GetRecipesAsync(request)).ReturnsAsync(response);
 
@@ -83,9 +83,9 @@ namespace RecipeAPI.UnitTests
             var result = await _recipeController.Post(request, CancellationToken.None);
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<RecipeResponse>>(result);
+            var actionResult = Assert.IsType<ActionResult<RecipeListResponse>>(result);
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
-            var returnedResponse = Assert.IsType<List<RecipeResponse>>(okResult.Value);
+            var returnedResponse = Assert.IsType<List<RecipeListResponse>>(okResult.Value);
             Assert.Equal(response, returnedResponse);
         }
 
@@ -100,7 +100,7 @@ namespace RecipeAPI.UnitTests
             var result = await _recipeController.Post(request, CancellationToken.None);
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<RecipeResponse>>(result);
+            var actionResult = Assert.IsType<ActionResult<RecipeListResponse>>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
             Assert.Equal("Invalid request. Ingredients are required.", badRequestResult.Value);
         }
@@ -116,7 +116,7 @@ namespace RecipeAPI.UnitTests
             var result = await _recipeController.Post(request, CancellationToken.None);
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<RecipeResponse>>(result);
+            var actionResult = Assert.IsType<ActionResult<RecipeListResponse>>(result);
             var statusCodeResult = Assert.IsType<ObjectResult>(actionResult.Result);
             Assert.Equal(500, statusCodeResult.StatusCode);
             Assert.Equal("An error occurred while processing your request.", statusCodeResult.Value);

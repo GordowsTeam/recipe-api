@@ -35,21 +35,26 @@ namespace RecipeAPI.Controllers
 
         // GET api/<RecipeController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<RecipeResponse>> Get(string id, [FromQuery] string? recipeSourceType = null)
+        public async Task<ActionResult<RecipeListResponse>> Get(string id, [FromQuery] RecipeSourceType? recipeSourceType = null)
         {
             if (string.IsNullOrEmpty(id))
             {
                 return BadRequest("Invalid request, Id is required");
             }
 
-            if (string.IsNullOrEmpty(recipeSourceType) || !Enum.TryParse<RecipeSourceType>(recipeSourceType, out var recipeType))
+            if(recipeSourceType == null)
             {
-                return BadRequest("Invalid request, recipe source type");
+                return BadRequest("Invalid request, recipe source type is required");
             }
+
+            //if (string.IsNullOrEmpty(recipeSourceType) || !Enum.TryParse<RecipeSourceType>(recipeSourceType, out var recipeType))
+            //{
+            //    return BadRequest("Invalid request, recipe source type");
+            //}
 
             try
             {
-                var recipe = await _getRecipeUseCase.ExecuteAsync(id, recipeType);
+                var recipe = await _getRecipeUseCase.ExecuteAsync(id, recipeSourceType.Value);
                 return Ok(recipe);
             }
             catch(Exception exception)
@@ -62,14 +67,14 @@ namespace RecipeAPI.Controllers
 
         // POST api/<RecipeController>
         [HttpPost]
-        public async Task<ActionResult<RecipeResponse>> Post([FromBody] RecipeRequest request, CancellationToken ct)
+        public async Task<ActionResult<RecipeListResponse>> Post([FromBody] RecipeRequest request, CancellationToken ct)
         {
             if (request == null || request.Ingredients == null || !request.Ingredients.Any() || request.Ingredients.Any(l => string.IsNullOrEmpty(l)))
             {
                 return BadRequest("Invalid request. Ingredients are required.");
             }
 
-            var recipeResponse = new List<RecipeResponse>();
+            var recipeResponse = new List<RecipeListResponse>();
             try
             {    
                 //TODO: move this code out of the try-catch
@@ -80,8 +85,11 @@ namespace RecipeAPI.Controllers
                         continue;
                     }
                     var response = await _recipeSearchUseCase.ExecuteAsync(request, recipeSourceType);
+                    if (response != null && response.Any()) 
+                    {
+                        recipeResponse.AddRange(response);
+                    }
                     
-                    recipeResponse.AddRange(response);
                 }
                 
                 return Ok(recipeResponse);

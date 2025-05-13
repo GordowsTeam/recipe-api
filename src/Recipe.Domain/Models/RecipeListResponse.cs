@@ -1,7 +1,7 @@
 ﻿using Recipe.Core.Enums;
 
 namespace Recipe.Core.Models;
-public class RecipeResponse
+public class RecipeListResponse
 {
     public int Id { get; set; }
     public required string Name { get; set; }

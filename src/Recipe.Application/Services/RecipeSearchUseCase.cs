@@ -17,7 +17,7 @@ public class RecipeSearchUseCase: IRecipeSearchUseCase
         _logger = logger;
     }
     
-    public async Task<IEnumerable<RecipeResponse>> ExecuteAsync(RecipeRequest recipeRequest, RecipeSourceType recipeSourceType)
+    public async Task<IEnumerable<RecipeListResponse>> ExecuteAsync(RecipeRequest recipeRequest, RecipeSourceType recipeSourceType)
     {
         ArgumentNullException.ThrowIfNull(recipeRequest);
 

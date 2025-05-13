@@ -4,9 +4,9 @@ using Recipe.Core.Enums;
 namespace Recipe.Infrastructure.Services.Edamame;
 public static class EdamameRecipeResponseExtensions
 {
-    public static IEnumerable<RecipeResponse> Map(this EdamameRecipeResponse response)
+    public static IEnumerable<RecipeListResponse> Map(this EdamameRecipeResponse response)
     {
-        var result = new List<RecipeResponse>();
+        var result = new List<RecipeListResponse>();
         if (response?.Hits == null) 
         {
             return result;
@@ -16,7 +16,7 @@ public static class EdamameRecipeResponseExtensions
         {
             if (edamameRecipe.Recipe == null) continue;
             
-            result.Add(new RecipeResponse()
+            result.Add(new RecipeListResponse()
             {
                 Name = edamameRecipe.Recipe.Label ?? string.Empty,
                 Images = [new() { Url = edamameRecipe.Recipe.Image ?? string.Empty, Main = true }],

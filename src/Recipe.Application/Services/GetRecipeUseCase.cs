@@ -7,7 +7,7 @@ using Recipe.Core.Enums;
 namespace Recipe.Application.Services;
 public interface IGetRecipeUseCase 
 {
-    Task<RecipeResponse> ExecuteAsync(string recipeId, RecipeSourceType recipeSourceType);
+    Task<RecipeDetailResponse> ExecuteAsync(string recipeId, RecipeSourceType recipeSourceType);
 }
 
 public class GetRecipeUseCase: IGetRecipeUseCase
@@ -22,7 +22,7 @@ public class GetRecipeUseCase: IGetRecipeUseCase
         _logger = logger;
     }
     
-    public async Task<RecipeResponse> ExecuteAsync(string recipeId, RecipeSourceType recipeSourceType)
+    public async Task<RecipeDetailResponse> ExecuteAsync(string recipeId, RecipeSourceType recipeSourceType)
     {
         if (string.IsNullOrEmpty(recipeId))
         {

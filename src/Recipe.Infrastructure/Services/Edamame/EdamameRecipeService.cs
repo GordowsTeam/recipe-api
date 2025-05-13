@@ -23,7 +23,7 @@ public class EdamameRecipeService: IRecipeService
         _logger = logger;
     }
 
-    public async Task<IEnumerable<RecipeResponse>?> GetRecipesAsync(RecipeRequest request)
+    public async Task<IEnumerable<RecipeListResponse>?> GetRecipesAsync(RecipeRequest request)
     {
         try
         {
@@ -59,7 +59,7 @@ public class EdamameRecipeService: IRecipeService
         }
     }
 
-    public Task<RecipeResponse> GetRecipeByIdAsync(string id)
+    public Task<RecipeDetailResponse?> GetRecipeByIdAsync(string id)
     {
         throw new NotImplementedException();
     }

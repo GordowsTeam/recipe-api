@@ -30,7 +30,7 @@ namespace Recipe.Domain.Tests.Models
             };
 
             // Act
-            var recipeResponse = new RecipeResponse
+            var recipeResponse = new RecipeListResponse
             {
                 Name = name,
                 Images = images,
