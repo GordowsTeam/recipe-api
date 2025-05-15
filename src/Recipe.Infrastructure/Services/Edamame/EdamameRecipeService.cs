@@ -1,10 +1,8 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Recipe.Application.Interfaces;
 using Recipe.Core.Models;
-using Recipe.Core.Enums;
 
 namespace Recipe.Infrastructure.Services.Edamame;
 public class EdamameRecipeService: IRecipeService

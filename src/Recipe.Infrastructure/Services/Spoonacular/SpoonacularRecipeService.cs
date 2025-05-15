@@ -30,6 +30,11 @@ public class SpoonacularRecipeService: IRecipeService
     {
         try
         {
+            if(request == null || request.Ingredients == null || !request.Ingredients.Any() || request.Ingredients.Any(l => string.IsNullOrEmpty(l)))
+            {
+                throw new ArgumentException("Ingredients cannot be null or empty", nameof(request.Ingredients));
+            }
+
             var httpClient = _httpClientFactory.CreateClient("SpoonacularAPI");
             httpClient.BaseAddress = new Uri(_spoonacularApiSettings.Uri);
             var requestUri = $"{searchEndpoint}?" +
@@ -134,7 +139,7 @@ public class SpoonacularRecipeService: IRecipeService
             Id = spoonacularRecipeDetail.id,
             Name = spoonacularRecipeDetail.title ?? string.Empty,
             Images = [new() { Url = spoonacularRecipeDetail.image ?? string.Empty, Main = true }],
-            Ingredients = spoonacularRecipeDetail.extendedIngredients == null ? [] : spoonacularRecipeDetail.extendedIngredients.Select(l => new Ingredient() { Text = l.name, Quantity = (decimal)l.amount, Measure = l.unit, Image = l.image }),
+            Ingredients = spoonacularRecipeDetail.extendedIngredients == null ? [] : spoonacularRecipeDetail.extendedIngredients.Select(l => new Ingredient() { Text = l.name, Quantity = (decimal)l.amount!, Measure = l.unit, Image = l.image }),
             MissingIngredients = [], //TODO
             Calories = 0,
             TotalTime = 0,

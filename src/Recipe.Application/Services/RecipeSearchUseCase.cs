@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using Recipe.Application.Constants;
 using Recipe.Application.Interfaces;
 using Recipe.Core.Models;
 using Recipe.Core.Enums;
@@ -17,13 +16,13 @@ public class RecipeSearchUseCase: IRecipeSearchUseCase
         _logger = logger;
     }
     
-    public async Task<IEnumerable<RecipeListResponse>> ExecuteAsync(RecipeRequest recipeRequest, RecipeSourceType recipeSourceType)
+    public async Task<IEnumerable<RecipeListResponse>?> ExecuteAsync(RecipeRequest recipeRequest, RecipeSourceType recipeSourceType)
     {
         ArgumentNullException.ThrowIfNull(recipeRequest);
 
         if (recipeRequest.Ingredients == null || !recipeRequest.Ingredients.Any() || recipeRequest.Ingredients.Any(l => string.IsNullOrEmpty(l)))
         {
-            throw new ArgumentException("Ingredients cannot be null or empty", nameof(recipeRequest.Ingredients));
+            throw new ArgumentException("Ingredients cannot be null or empty");
         }
 
         var service = _recipeServiceFactory.CreateRecipeService(recipeSourceType);
