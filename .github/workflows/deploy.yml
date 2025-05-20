@@ -66,6 +66,7 @@ jobs:
         run: |
           sed -i 's|__APP-ID__|${{ secrets.EDAMAME_APP_ID }}|g' $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json
           sed -i 's|__APP-KEY__|${{ secrets.EDAMAME_APP_KEY }}|g' $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json
+          sed -i 's|__APP-KEY__|${{ secrets.SPOONACULAR_API_KEY }}|g' $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json
 
       - name: Terraform Init
         id: init
