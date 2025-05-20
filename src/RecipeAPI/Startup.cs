@@ -3,6 +3,7 @@ using Recipe.Application.Interfaces;
 using Recipe.Application.Services;
 using Recipe.Infrastructure.Services;
 using Recipe.Infrastructure.Services.Edamame;
+using Recipe.Infrastructure.Services.Spoonacular;
 
 namespace RecipeAPI;
 
@@ -43,11 +44,20 @@ public class Startup
                     .AllowAnyMethod()
                     .AllowAnyHeader());
         });
-        services.AddScoped<IRecipeRepository, MockRecipeRepository>();
-        services.AddScoped<IRecipeService, RecipeService>();
-        services.AddScoped<IThirdPartyRecipeService, EdamameRecipeService>();
+
+        services.AddScoped<MockRecipeRepository>();
+        services.AddScoped<EdamameRecipeService>();
+        services.AddScoped<SpoonacularRecipeService>();
+        services.AddScoped<IRecipeServiceFactory, RecipeServiceFactory>();
+        services.AddScoped<IRecipeSearchUseCase, RecipeSearchUseCase>();
+        services.AddScoped<IGetRecipeUseCase, GetRecipeUseCase>();
+
         services.Configure<EdamameAPISettings>(Configuration.GetSection("EdamameAPISettings"));
         services.AddSingleton<EdamameAPISettings>();
+
+        services.Configure<SpoonacularAPISettings>(Configuration.GetSection("SpoonacularAPISettings"));
+        services.AddSingleton<SpoonacularAPISettings>();
+        
         services.AddControllers();
     }
 

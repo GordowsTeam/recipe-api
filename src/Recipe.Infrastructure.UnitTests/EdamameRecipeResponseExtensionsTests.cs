@@ -11,7 +11,7 @@ namespace Recipe.Infrastructure.Tests.Services.Edamame
         public void Map_ShouldReturnEmptyList_WhenResponseIsNull()
         {
             // Arrange
-            EdamameRecipeResponse response = null;
+            EdamameRecipeResponse? response = null;
 
             // Act
             var result = response.Map();
@@ -82,16 +82,6 @@ namespace Recipe.Infrastructure.Tests.Services.Edamame
             var image = Assert.Single(recipeResponse.Images);
             Assert.Equal("http://example.com/image.jpg", image.Url);
             Assert.True(image.Main);
-            Assert.NotNull(recipeResponse.Ingredients);
-            Assert.Equal(2, recipeResponse.Ingredients.Count());
-            Assert.Equal(500, recipeResponse.Calories);
-            Assert.Equal(30, recipeResponse.TotalTime);
-            Assert.NotNull(recipeResponse.CuisinTypes);
-            Assert.Single(recipeResponse.CuisinTypes);
-            Assert.Equal("American", recipeResponse.CuisinTypes.First());
-            Assert.NotNull(recipeResponse.MealTypes);
-            Assert.Single(recipeResponse.MealTypes);
-            Assert.Equal("Dinner", recipeResponse.MealTypes.First());
         }
     }
 }

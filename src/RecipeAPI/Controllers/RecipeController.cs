@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Recipe.Application.Interfaces;
 using Recipe.Core.Models;
+using Recipe.Core.Enums;
+using Recipe.Application.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,16 +10,15 @@ namespace RecipeAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RecipeController : ControllerBase
+    public class RecipeController(
+        IRecipeSearchUseCase recipeSearchUseCase,
+        IGetRecipeUseCase getRecipeUseCase,
+        ILogger<RecipeController> logger) : ControllerBase
     {
-        private readonly IRecipeService _recipeService;
-        private readonly ILogger<RecipeController> _logger;
+        private readonly IRecipeSearchUseCase _recipeSearchUseCase = recipeSearchUseCase;
+        private readonly IGetRecipeUseCase _getRecipeUseCase = getRecipeUseCase;
 
-        public RecipeController(IRecipeService recipeService, ILogger<RecipeController> logger)
-        {
-            _recipeService = recipeService;
-            _logger = logger;
-        }
+        private readonly ILogger<RecipeController> _logger = logger;
 
         // GET: api/<RecipeController>
         [HttpGet]
@@ -28,48 +29,67 @@ namespace RecipeAPI.Controllers
 
         // GET api/<RecipeController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<RecipeListResponse>> Get(string id, [FromQuery] RecipeSourceType? recipeSourceType = null)
         {
-            return "value";
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest("Invalid request, Id is required");
+            }
+
+            if (recipeSourceType == null)
+            {
+                return BadRequest("Invalid request, recipe source type is required");
+            }
+
+            try
+            {
+                var recipe = await _getRecipeUseCase.ExecuteAsync(id, recipeSourceType.Value);
+                return Ok(recipe);
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, "An error occurred while processing the request.");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         // POST api/<RecipeController>
         [HttpPost]
-        public async Task<ActionResult<RecipeResponse>> Post([FromBody] RecipeRequest request, CancellationToken ct)
+        public async Task<ActionResult<RecipeListResponse>> Post([FromBody] RecipeRequest request, CancellationToken ct)
         {
             if (request == null || request.Ingredients == null || !request.Ingredients.Any() || request.Ingredients.Any(l => string.IsNullOrEmpty(l)))
             {
                 return BadRequest("Invalid request. Ingredients are required.");
             }
 
-            try
+            var recipeResponse = new List<RecipeListResponse>();
+            foreach (RecipeSourceType recipeSourceType in Enum.GetValues(typeof(RecipeSourceType)))
             {
-                var response = await _recipeService.GetRecipesAsync(request);
-                return Ok(response);
-            }
-            catch (ArgumentException ex)
-            {
-                _logger.LogError(ex, "Invalid request. Ingredients are required.");
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while processing the request.");
-                // Log the exception (logging mechanism not shown here)
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
-        }
+                try
+                {
+                    if (Environment.GetEnvironmentVariable($"{recipeSourceType.ToString().ToLower()}_active") != "true")
+                    {
+                        continue;
+                    }
+                    var response = await _recipeSearchUseCase.ExecuteAsync(request, recipeSourceType);
+                    if (response != null && response.Any())
+                    {
+                        recipeResponse.AddRange(response);
+                    }
 
-        // PUT api/<RecipeController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+                }
+                catch (ArgumentException ex)
+                {
+                    _logger.LogError(ex, "Invalid request. Ingredients are required.");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"An error occurred while processing the request. Source Type: { recipeSourceType.ToString() }");
+                }
+            }
 
-        // DELETE api/<RecipeController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return Ok(recipeResponse);
+
         }
     }
 }

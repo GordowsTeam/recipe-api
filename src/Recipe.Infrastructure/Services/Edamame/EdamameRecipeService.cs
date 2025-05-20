@@ -5,8 +5,7 @@ using Recipe.Application.Interfaces;
 using Recipe.Core.Models;
 
 namespace Recipe.Infrastructure.Services.Edamame;
-
-public class EdamameRecipeService : IThirdPartyRecipeService
+public class EdamameRecipeService: IRecipeService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly JsonSerializerOptions _jsonOptionSerialier;
@@ -22,7 +21,7 @@ public class EdamameRecipeService : IThirdPartyRecipeService
         _logger = logger;
     }
 
-    public async Task<IEnumerable<RecipeResponse>?> GetRecipesAsync(RecipeRequest request)
+    public async Task<IEnumerable<RecipeListResponse>?> GetRecipesAsync(RecipeRequest request)
     {
         try
         {
@@ -56,6 +55,11 @@ public class EdamameRecipeService : IThirdPartyRecipeService
             _logger.LogError($"There was an exception while trying to consume Edamame API Services. Error: {e.Message}");
             return null;
         }
+    }
+
+    public Task<RecipeDetailResponse?> GetRecipeByIdAsync(string id)
+    {
+        throw new NotImplementedException();
     }
 }
 
