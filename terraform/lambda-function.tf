@@ -1,7 +1,7 @@
 ## AWS Lambda Resources
 resource "aws_lambda_function" "recipe-lambda-function" {
   filename         = "recipe_api.zip"
-  function_name    = "recipe-api-lambda"
+  function_name    = "recipe-api-lambda-${var.environment_name}"
   role             = aws_iam_role.lambda-role.arn
   handler          = "RecipeAPI::RecipeAPI.LambdaEntryPoint::FunctionHandlerAsync"
   source_code_hash = data.archive_file.archive-lambda.output_base64sha256
@@ -10,14 +10,15 @@ resource "aws_lambda_function" "recipe-lambda-function" {
   timeout          = 30
   environment {
     variables = {
-      ASPNETCORE_ENVIRONMENT = "Development"
-      EDAMAME_API_ACTIVE = "false"
+      ASPNETCORE_ENVIRONMENT = "${var.environment_name}"
+      spoonacular_active = "true"
+      internal_active = "true"
     }
   }
 }
 
 resource "aws_iam_role" "lambda-role" {
-  name = "lambda-role"
+  name = "lambda-role-${var.environment_name}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -47,7 +48,7 @@ resource "aws_lambda_permission" "apigw-lambda" {
  }
 
 resource "aws_iam_policy" "lambda_logging_policy" {
-  name = "lambda_logging_policy"
+  name = "lambda_logging_policy-${var.environment_name}"
 
   policy = jsonencode({
     Version = "2012-10-17"
