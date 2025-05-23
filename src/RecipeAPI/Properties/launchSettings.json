@@ -3,11 +3,12 @@
     "RecipeAPI": {
       "commandName": "Project",
       "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "edamame_active":"true",
-        "spoonacular_active":"true"
-      },
+        "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development",
+            "edamame_active": "false",
+            "spoonacular_active": "true",
+            "internal_active": "true"
+        },
       "applicationUrl": "https://localhost:56548;http://localhost:56549"
     }
   }

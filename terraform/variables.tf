@@ -13,7 +13,7 @@ variable "recipe_api_name" {
 variable "environment_name" {
   description = "The name of your API stage"
   type        = string
-  default     = "test"
+  default     = "dev"
 }
 
 variable "account_id" {
