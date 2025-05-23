@@ -1,7 +1,7 @@
 
 ## AWS api gateway
 resource "aws_api_gateway_rest_api" "recipe-api" {
-  name = "${var.recipe_api_name}"
+  name = "${var.recipe_api_name}-${var.environment_name}"
   description = "Recipe API Gateway"
   endpoint_configuration {
     types = ["REGIONAL"]
