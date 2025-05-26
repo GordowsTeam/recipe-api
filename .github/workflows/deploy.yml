@@ -53,6 +53,7 @@ jobs:
     defaults:
       run:
         working-directory: terraform
+
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release/test'
     steps:
       - name: Checkout
@@ -63,6 +64,11 @@ jobs:
         with:
           terraform_version: 1.10.2
           terraform_wrapper: false
+      
+      - name: Print Environment Variables
+        run: |
+          echo "ENV: $ENV"
+          echo "TF_VAR_environment_name: $TF_VAR_environment_name"
           
       - name: Verify appsettings.json Exists
         run: |
