@@ -65,7 +65,7 @@ jobs:
           terraform_version: 1.10.2
           terraform_wrapper: false
       
-      - name: Print Environment Variables
+      - name: Print Environment Variables 1
         run: |
           echo "ENV: $ENV"
           echo "TF_VAR_environment_name: $TF_VAR_environment_name"
