@@ -35,6 +35,13 @@ resource "aws_api_gateway_method" "recipe-post-method" {
   authorization = "NONE"
 }
 
+resource "aws_api_gateway_method" "recipe-options" {
+  rest_api_id   = aws_api_gateway_rest_api.recipe-api.id
+  resource_id   = aws_api_gateway_resource.recipe-resource.id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
 resource "aws_api_gateway_method" "values-get-method" {
   rest_api_id = aws_api_gateway_rest_api.recipe-api.id
   resource_id = aws_api_gateway_resource.values-resource.id
@@ -52,6 +59,54 @@ resource "aws_api_gateway_integration" "recipe-integration" {
   uri = aws_lambda_function.recipe-lambda-function.invoke_arn
   timeout_milliseconds = 29000
 }
+
+resource "aws_api_gateway_integration" "recipe-options" {
+  rest_api_id             = aws_api_gateway_rest_api.recipe-api.id
+  resource_id             = aws_api_gateway_resource.recipe-resource.id
+  http_method             = aws_api_gateway_method.recipe-options.http_method
+  type                    = "MOCK"
+  passthrough_behavior    = "WHEN_NO_MATCH"
+
+  request_templates = {
+    "application/json" = <<EOF
+{
+  "statusCode": 200
+}
+EOF
+  }
+}
+
+resource "aws_api_gateway_method_response" "recipe-options" {
+  rest_api_id = aws_api_gateway_rest_api.recipe-api.id
+  resource_id = aws_api_gateway_resource.recipe-resource.id
+  http_method = aws_api_gateway_method.recipe-options.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+    "method.response.header.Access-Control-Allow-Origin"  = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "recipe-options" {
+  rest_api_id = aws_api_gateway_rest_api.recipe-api.id
+  resource_id = aws_api_gateway_resource.recipe-resource.id
+  http_method = aws_api_gateway_method.recipe-options.http_method
+  status_code = aws_api_gateway_method_response.recipe-options.status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+    "method.response.header.Access-Control-Allow-Methods" = "'GET,POST,OPTIONS'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'https://d6js4lwk155ll.cloudfront.net'"
+  }
+
+  response_templates = {
+    "application/json" = ""
+  }
+}
+
+
 
 resource "aws_api_gateway_integration" "values-integration" {
   rest_api_id = aws_api_gateway_rest_api.recipe-api.id
