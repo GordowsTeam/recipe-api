@@ -58,7 +58,6 @@ jobs:
     defaults:
       run:
         working-directory: terraform
-        
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release/test'
     steps:
       - name: Checkout
