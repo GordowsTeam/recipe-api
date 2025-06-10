@@ -7,6 +7,7 @@ on:
     branches: [ "main", "develop", "release/test" ]
 
 jobs:
+  # Build and Test
   build:
     runs-on: ubuntu-latest
     steps:
@@ -19,6 +20,8 @@ jobs:
       run: dotnet restore ./src
     - name: Build
       run: dotnet build --no-restore ./src
+  
+  # Run Tests
   tests:
     needs: build
     runs-on: ubuntu-latest
@@ -34,6 +37,8 @@ jobs:
       run: dotnet build --no-restore ./src
     - name: Test
       run: dotnet test --no-build --verbosity normal ./src
+  
+  # Deploy to AWS using Terraform
   deploy:
     name: "Terraform"
     needs: tests
@@ -53,7 +58,6 @@ jobs:
     defaults:
       run:
         working-directory: terraform
-
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release/test'
     steps:
       - name: Checkout
@@ -81,7 +85,7 @@ jobs:
         run: |
           sed -i 's|__APP-ID__|${{ secrets.EDAMAME_APP_ID }}|g' $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json
           sed -i 's|__APP-KEY__|${{ secrets.EDAMAME_APP_KEY }}|g' $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json
-          sed -i 's|__APP-KEY__|${{ secrets.SPOONACULAR_API_KEY }}|g' $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json
+          sed -i 's|__API-KEY__|${{ secrets.SPOONACULAR_API_KEY }}|g' $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json
 
       - name: Terraform Init with dynamic backend
         id: init
