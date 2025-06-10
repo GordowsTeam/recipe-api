@@ -98,7 +98,7 @@ resource "aws_api_gateway_integration_response" "recipe-options" {
   response_parameters = {
     "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
     "method.response.header.Access-Control-Allow-Methods" = "'GET,POST,OPTIONS'"
-    "method.response.header.Access-Control-Allow-Origin"  = "'https://d6js4lwk155ll.cloudfront.net'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
 
   response_templates = {
@@ -126,6 +126,18 @@ resource "aws_api_gateway_deployment" "recipe-deployment" {
     redeployment = sha1(jsonencode([
       aws_api_gateway_rest_api.recipe-api.body,
       aws_api_gateway_rest_api.recipe-api.root_resource_id,
+
+      # POST /api/recipe
+      aws_api_gateway_method.recipe-post-method.id,
+      aws_api_gateway_integration.recipe-integration.id,
+
+      # OPTIONS /api/recipe
+      aws_api_gateway_method.recipe-options.id,
+      aws_api_gateway_method_response.recipe-options.id,
+      aws_api_gateway_integration.recipe-options.id,
+      aws_api_gateway_integration_response.recipe-options.id,
+
+      # GET /api/values
       aws_api_gateway_method.values-get-method.id,
       aws_api_gateway_integration.values-integration.id,
     ]))
