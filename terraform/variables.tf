@@ -21,3 +21,24 @@ variable "account_id" {
   type      = string
   sensitive = true
 }
+
+variable "aws_cognito_callback_urls" {
+  description = "List of callback URLs for AWS Cognito User Pool Client"
+  default   = "http://localhost:9000/spa"
+  type      = string
+  sensitive = true
+}
+
+variable "google_client_id" {
+  description = "Google Client ID for Cognito integration"
+  default   = ""
+  type      = string
+  sensitive = true
+}
+
+variable "google_client_secret" {
+  description = "Google Client Secret for Cognito integration"
+  default   = ""
+  type      = string
+  sensitive = true
+}
