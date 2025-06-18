@@ -27,12 +27,22 @@ resource "aws_api_gateway_resource" "values-resource" {
   path_part = "values"
 }
 
+## Cognito Authorizer (if needed)
+resource "aws_api_gateway_authorizer" "cognito" {
+  name          = "cognito-authorizer"
+  rest_api_id   = aws_api_gateway_rest_api.recipe-api.id
+  identity_source = "method.request.header.Authorization"
+  type          = "COGNITO_USER_POOLS"
+  provider_arns = [aws_cognito_user_pool.recipe_pool.arn]
+}
+
 ## Methods
 resource "aws_api_gateway_method" "recipe-post-method" {
   rest_api_id = aws_api_gateway_rest_api.recipe-api.id
   resource_id = aws_api_gateway_resource.recipe-resource.id
   http_method = "POST"
-  authorization = "NONE"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
 }
 
 resource "aws_api_gateway_method" "recipe-options" {
@@ -105,8 +115,6 @@ resource "aws_api_gateway_integration_response" "recipe-options" {
     "application/json" = ""
   }
 }
-
-
 
 resource "aws_api_gateway_integration" "values-integration" {
   rest_api_id = aws_api_gateway_rest_api.recipe-api.id
