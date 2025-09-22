@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Recipe.Core.Enums;
+﻿using Recipe.Domain.Enums;
 
-namespace Recipe.Core.Models
+namespace Recipe.Domain.Models
 {
-    public class RecipeDetailResponse
+    public class Recipe
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public required string Name { get; set; }
         public IEnumerable<Image>? Images { get; set; }
         public IEnumerable<Ingredient>? Ingredients { get; set; }

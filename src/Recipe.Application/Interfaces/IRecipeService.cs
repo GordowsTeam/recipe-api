@@ -1,5 +1,4 @@
-using Recipe.Core.Models;
-using Recipe.Core.Enums;
+using Recipe.Application.Dtos;
 
 namespace Recipe.Application.Interfaces;
 public interface IRecipeService

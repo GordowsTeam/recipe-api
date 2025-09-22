@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using Recipe.Core.Models;
+using Recipe.Application.Dtos;
 using Recipe.Infrastructure.Services.Edamame;
+using Recipe.Infrastructure.Services.Edamame.Dtos;
 using Xunit;
 
 namespace Recipe.Infrastructure.Tests.Services.Edamame

@@ -1,5 +1,6 @@
-﻿using Recipe.Core.Models;
-using Recipe.Core.Enums;
+﻿using Recipe.Domain.Enums;
+using Recipe.Application.Dtos;
+using Recipe.Infrastructure.Services.Edamame.Dtos;
 
 namespace Recipe.Infrastructure.Services.Edamame;
 public static class EdamameRecipeResponseExtensions

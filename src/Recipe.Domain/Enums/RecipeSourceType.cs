@@ -1,4 +1,4 @@
-namespace Recipe.Core.Enums;
+namespace Recipe.Domain.Enums;
 
 public enum RecipeSourceType
 {

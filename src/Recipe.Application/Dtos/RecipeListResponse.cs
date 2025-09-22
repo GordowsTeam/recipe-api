@@ -1,6 +1,6 @@
-﻿using Recipe.Core.Enums;
+﻿using Recipe.Domain.Enums;
 
-namespace Recipe.Core.Models;
+namespace Recipe.Application.Dtos;
 public class RecipeListResponse
 {
     public int Id { get; set; }

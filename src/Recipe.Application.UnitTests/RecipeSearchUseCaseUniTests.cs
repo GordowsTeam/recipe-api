@@ -2,8 +2,8 @@
 using Moq;
 using Recipe.Application.Interfaces;
 using Recipe.Application.Services;
-using Recipe.Core.Models;
-using Recipe.Core.Enums;
+using Recipe.Application.Dtos;
+using Recipe.Domain.Enums;
 using Xunit;
 
 namespace Recipe.Application.Tests.Services;

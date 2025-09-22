@@ -274,3 +274,5 @@ terraform/api-gateway/.terraform/providers/registry.terraform.io/hashicorp/aws/5
 src/RecipeAPI/appsettings.Development.json
 src/RecipeAPI/appsettings.Development.json
 src/RecipeAPI/appsettings.Development.json
+src/Recipe_ETL/appsettings.json
+src/RecipeAPI/appsettings.json

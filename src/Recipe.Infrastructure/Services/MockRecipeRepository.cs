@@ -1,6 +1,6 @@
+using Recipe.Application.Dtos;
 using Recipe.Application.Interfaces;
-using Recipe.Core.Enums;
-using Recipe.Core.Models;
+using Recipe.Domain.Enums;
 
 namespace Recipe.Infrastructure.Services;
 public class MockRecipeRepository : IRecipeService
@@ -10,7 +10,7 @@ public class MockRecipeRepository : IRecipeService
         var recipes = new List<RecipeListResponse>() { new ()
         {
             Name = "Pasta 14",
-            Images = new List<Image>() { new() { Url = "https://cdn.apartmenttherapy.info/image/upload/f_jpg,q_auto:eco,c_fill,g_auto,w_1500,ar_1:1/k%2FPhoto%2FRecipes%2F2023-01-Caramelized-Tomato-Paste-Pasta%2F06-CARAMELIZED-TOMATO-PASTE-PASTA-039", Main = true } },
+            Images = new List<Application.Dtos.Image>() { new() { Url = "https://cdn.apartmenttherapy.info/image/upload/f_jpg,q_auto:eco,c_fill,g_auto,w_1500,ar_1:1/k%2FPhoto%2FRecipes%2F2023-01-Caramelized-Tomato-Paste-Pasta%2F06-CARAMELIZED-TOMATO-PASTE-PASTA-039", Main = true } },
             RecipeSourceType = RecipeSourceType.Internal
         } };
         return Task.FromResult<IEnumerable<RecipeListResponse>>(recipes)!;

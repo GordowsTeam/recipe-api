@@ -1,8 +1,9 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Recipe.Application.Dtos;
 using Recipe.Application.Interfaces;
-using Recipe.Core.Models;
+using Recipe.Infrastructure.Services.Edamame.Dtos;
 
 namespace Recipe.Infrastructure.Services.Edamame;
 public class EdamameRecipeService: IRecipeService
@@ -62,11 +63,3 @@ public class EdamameRecipeService: IRecipeService
         throw new NotImplementedException();
     }
 }
-
-public record EdamameRecipeResponse(Source[]? Hits);
-
-public record Source(EdamameRecipe? Recipe);
-
-public record EdamameRecipe(string? Uri, string? Label, string? Url, string[]? IngredientLines, string? Image, EdamameIngredient[]? Ingredients, decimal Calories, decimal TotalTime, string[]? CuisineType, string[]? MealType);
-
-public record EdamameIngredient(string Text, decimal Quantity, string Measure, string Food, decimal Weight, string Image);

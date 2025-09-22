@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Recipe.Application.Interfaces;
-using Recipe.Core.Models;
-using Recipe.Core.Enums;
+using Recipe.Application.Dtos;
+using Recipe.Domain.Enums;
 
 namespace Recipe.Application.Services;
 public class RecipeSearchUseCase: IRecipeSearchUseCase

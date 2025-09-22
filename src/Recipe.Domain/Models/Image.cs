@@ -1,7 +1,9 @@
-﻿namespace Recipe.Core.Models;
-
-public class Image
+﻿namespace Recipe.Domain.Models
 {
-    public string? Url { get; set; }
-    public bool Main { get; set; }      
+    public class Image
+    {
+        public string? Url { get; set; }
+        public bool Main { get; set; }
+    }
+
 }

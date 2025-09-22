@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Recipe.Application.Interfaces;
-using Recipe.Core.Models;
-using Recipe.Core.Enums;
+using Recipe.Domain.Models;
+using Recipe.Domain.Enums;
 using Recipe.Application.Services;
+using Recipe.Application.Dtos;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

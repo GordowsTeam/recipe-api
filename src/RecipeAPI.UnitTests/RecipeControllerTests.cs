@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Recipe.Application.Constants;
+using Recipe.Application.Dtos;
 using Recipe.Application.Interfaces;
 using Recipe.Application.Services;
-using Recipe.Core.Models;
+using Recipe.Domain.Models;
 using RecipeAPI.Controllers;
 using Xunit;
 
@@ -83,7 +84,7 @@ namespace RecipeAPI.UnitTests
             {
                 new RecipeListResponse { Name = "Tomato Soup" }
             };
-            _recipeSearchUseCaseMock.Setup(service => service.ExecuteAsync(request, Recipe.Core.Enums.RecipeSourceType.Internal)).ReturnsAsync(response);
+            _recipeSearchUseCaseMock.Setup(service => service.ExecuteAsync(request, Recipe.Domain.Enums.RecipeSourceType.Internal)).ReturnsAsync(response);
 
             // Act
             var result = await _recipeController.Post(request, CancellationToken.None);

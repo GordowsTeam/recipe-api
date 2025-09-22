@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using Recipe.Core.Models;
+using Recipe.Domain;
+using Recipe.Domain.Models;
 using Xunit;
 
 namespace Recipe.Domain.Tests.Models
@@ -17,7 +18,7 @@ namespace Recipe.Domain.Tests.Models
             };
 
             // Act
-            var recipeResponse = new RecipeListResponse
+            var recipeResponse = new Domain.Models.Recipe
             {
                 Name = name,
                 Images = images
