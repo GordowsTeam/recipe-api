@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using Recipe.Application.Dtos;
 using Recipe.Application.Interfaces;
 
 namespace Recipe.Infrastructure.Services
@@ -17,15 +18,36 @@ namespace Recipe.Infrastructure.Services
             return await _collection.Find(r => r.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Domain.Models.Recipe>?> GetRecipesAsync(IEnumerable<string> ingredients)
+        public async Task<IEnumerable<Domain.Models.Recipe>?> GetRecipesAsync(RecipeRequest recipeRequest)
         {
             var filterBuilder = Builders<Domain.Models.Recipe>.Filter;
             var filter = filterBuilder.Empty;
 
-            if (ingredients != null && ingredients.Any())
+            if (recipeRequest.Name != null)
             {
-                // Filter recipes that have at least one ingredient matching the requested names
-                filter &= filterBuilder.In("Ingredients.Name", ingredients);
+                filter &= filterBuilder.Regex(r => r.Name, new MongoDB.Bson.BsonRegularExpression(recipeRequest.Name, "i"));
+            }
+
+            if (recipeRequest.Ingredients != null && recipeRequest.Ingredients.Any())
+            {
+                var regexFilters = recipeRequest.Ingredients
+                           .Select(name => filterBuilder.Regex("Ingredients.Name", new MongoDB.Bson.BsonRegularExpression(name, "i")))
+                           .ToList();
+
+                filter &= recipeRequest.MatchAllIngredients
+                    ? filterBuilder.And(regexFilters)  // all ingredients
+                    : filterBuilder.Or(regexFilters);  // at least one ingredient
+            }
+
+            if (recipeRequest.CuisineTypes != null && recipeRequest.CuisineTypes.Any())
+            {
+                //filter &= filterBuilder.In(r => r.CuisinTypes, recipeFilters.CuisineTypes);
+            }
+
+            // Filter by meal types (at least one match)
+            if (recipeRequest.MealTypes != null && recipeRequest.MealTypes.Any())
+            {
+                //filter &= filterBuilder.In(r => r.MealTypes, recipeFilters.MealTypes);
             }
 
             var recipes = await _collection.Find(filter).ToListAsync();

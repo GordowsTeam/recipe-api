@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using Recipe.Application.Dtos;
 using Recipe.Application.Interfaces;
+using Recipe.Application.Validators;
 
 namespace Recipe.Infrastructure.Services
 {
@@ -29,12 +30,12 @@ namespace Recipe.Infrastructure.Services
 
         public async Task<IEnumerable<RecipeListResponse>?> GetRecipesAsync(RecipeRequest request)
         {
-            if(request.Ingredients == null || !request.Ingredients.Any())
-                throw new ArgumentException("At least one ingredient must be provided.", nameof(request.Ingredients));
+            if(!request.IsValid(out var errorMessage))
+                throw new ArgumentException(errorMessage);
 
-            var recipes = await _recipeRepository.GetRecipesAsync(request.Ingredients);
+            var recipes = await _recipeRepository.GetRecipesAsync(request);
             
-            return recipes.Select(r => new RecipeListResponse
+            return recipes?.Select(r => new RecipeListResponse
             {
                 Id = r.Id.ToString(),
                 Name = r.Name,

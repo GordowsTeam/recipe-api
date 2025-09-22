@@ -29,7 +29,7 @@ public class SpoonacularRecipeService: IRecipeService
     {
         try
         {
-            if(request == null || request.Ingredients == null || !request.Ingredients.Any() || request.Ingredients.Any(l => string.IsNullOrEmpty(l)))
+            if (request == null || request.Ingredients == null || !request.Ingredients.Any() || request.Ingredients.Any(l => string.IsNullOrEmpty(l)))
             {
                 throw new ArgumentException("Ingredients cannot be null or empty", nameof(request.Ingredients));
             }

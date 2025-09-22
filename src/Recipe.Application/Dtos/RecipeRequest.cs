@@ -7,5 +7,9 @@ public class RecipeRequest
         Ingredients = ingredients;
     }
 
-    public IEnumerable<string>? Ingredients { get; set; }    
+    public IEnumerable<string>? Ingredients { get; set; }
+    public bool MatchAllIngredients { get; set; } = false;
+    public string? Name { get; set; }
+    public IEnumerable<string>? CuisineTypes { get; set; }
+    public IEnumerable<string>? MealTypes { get; set; }
 }

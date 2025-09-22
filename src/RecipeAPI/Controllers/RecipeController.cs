@@ -4,6 +4,7 @@ using Recipe.Domain.Models;
 using Recipe.Domain.Enums;
 using Recipe.Application.Services;
 using Recipe.Application.Dtos;
+using Recipe.Application.Validators;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -37,14 +38,9 @@ namespace RecipeAPI.Controllers
                 return BadRequest("Invalid request, Id is required");
             }
 
-            if (recipeSourceType == null)
-            {
-                return BadRequest("Invalid request, recipe source type is required");
-            }
-
             try
             {
-                var recipe = await _getRecipeUseCase.ExecuteAsync(id, recipeSourceType.Value);
+                var recipe = await _getRecipeUseCase.ExecuteAsync(id, recipeSourceType.HasValue ? recipeSourceType.Value : RecipeSourceType.Internal);
                 return Ok(recipe);
             }
             catch (Exception exception)
@@ -58,9 +54,9 @@ namespace RecipeAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<RecipeListResponse>> Post([FromBody] RecipeRequest request, CancellationToken ct)
         {
-            if (request == null || request.Ingredients == null || !request.Ingredients.Any() || request.Ingredients.Any(l => string.IsNullOrEmpty(l)))
+            if (!request.IsValid(out var errorMessage))
             {
-                return BadRequest("Invalid request. Ingredients are required.");
+                return BadRequest($"Invalid request:{errorMessage}");
             }
 
             var recipeResponse = new List<RecipeListResponse>();
