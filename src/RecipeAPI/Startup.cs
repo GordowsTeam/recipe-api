@@ -1,4 +1,9 @@
 ﻿using AWS.Logger;
+using Microsoft.Extensions.Configuration;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using Recipe.Application.Interfaces;
 using Recipe.Application.Services;
 using Recipe.Infrastructure.Services;
@@ -45,9 +50,17 @@ public class Startup
                     .AllowAnyHeader());
         });
 
+        // MongoDB settings
+        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+        var mongodbSettings = Configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>() ?? throw new ApplicationException("MongoDB connection string is not set");
+        services.AddSingleton<IMongoClient>(sp => new MongoClient(mongodbSettings.ConnectionString));
+        services.AddSingleton(sp => sp.GetRequiredService<IMongoClient>().GetDatabase(mongodbSettings.DatabaseName));
+        services.AddScoped<IRecipeRepository, MongoRecipeRepository>();
+
         services.AddScoped<MockRecipeRepository>();
         services.AddScoped<EdamameRecipeService>();
         services.AddScoped<SpoonacularRecipeService>();
+        services.AddScoped<InternalRecipeService>();
         services.AddScoped<IRecipeServiceFactory, RecipeServiceFactory>();
         services.AddScoped<IRecipeSearchUseCase, RecipeSearchUseCase>();
         services.AddScoped<IGetRecipeUseCase, GetRecipeUseCase>();

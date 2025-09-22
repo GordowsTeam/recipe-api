@@ -4,7 +4,7 @@ namespace Recipe.Application.Dtos
 {
     public class RecipeDetailResponse
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public required string Name { get; set; }
         public IEnumerable<Image>? Images { get; set; }
         public IEnumerable<Ingredient>? Ingredients { get; set; }
@@ -27,7 +27,6 @@ namespace Recipe.Application.Dtos
                 Name = recipeDetailResponse.Name,
                 Images = recipeDetailResponse.Images?.Select(i => i.ToImage()) ?? [],
                 Ingredients = recipeDetailResponse.Ingredients?.Select(i => i.ToIngredient()).ToList() ?? [],
-                MissingIngredients = recipeDetailResponse.MissingIngredients?.ToList() ?? [],
                 Calories = recipeDetailResponse.Calories,
                 TotalTime = recipeDetailResponse.TotalTime,
                 CuisinTypes = recipeDetailResponse.CuisinTypes?.ToList() ?? [],
@@ -60,7 +59,7 @@ namespace Recipe.Application.Dtos
         {
             return new Domain.Models.Ingredient
             {
-                Text = ingredient.Text,
+                Name = ingredient.Text,
                 Quantity = ingredient.Quantity,
                 Measure = ingredient.Measure,
                 Image = ingredient.Image

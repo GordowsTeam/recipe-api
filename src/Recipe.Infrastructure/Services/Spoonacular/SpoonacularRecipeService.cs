@@ -85,7 +85,7 @@ public class SpoonacularRecipeService: IRecipeService
             
             result.Add(new RecipeListResponse()
             {
-                Id = spoonacularRecipe.id,
+                Id = spoonacularRecipe.id.ToString(),
                 Name =  spoonacularRecipe.title ?? string.Empty,
                 Images = [new() { Url = spoonacularRecipe.image ?? string.Empty, Main = true }],
                 RecipeSourceType = RecipeSourceType.Spoonacular
@@ -141,7 +141,7 @@ public class SpoonacularRecipeService: IRecipeService
     {
         var result = new RecipeDetailResponse 
         {
-            Id = spoonacularRecipeDetail.id,
+            Id = spoonacularRecipeDetail.id.ToString(),
             Name = spoonacularRecipeDetail.title ?? string.Empty,
             Images = [new() { Url = spoonacularRecipeDetail.image ?? string.Empty, Main = true }],
             Ingredients = spoonacularRecipeDetail.extendedIngredients == null ? [] : spoonacularRecipeDetail.extendedIngredients.Select(l => new Ingredient() { Text = l.name, Quantity = (decimal)l.amount!, Measure = l.unit, Image = l.image }),

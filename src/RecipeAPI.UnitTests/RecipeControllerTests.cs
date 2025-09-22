@@ -82,7 +82,7 @@ namespace RecipeAPI.UnitTests
             var request = new RecipeRequest { Ingredients = new List<string> { "Tomato", "Cheese" } };
             var response = new List<RecipeListResponse>
             {
-                new RecipeListResponse { Name = "Tomato Soup" }
+                new RecipeListResponse { Id = Guid.NewGuid().ToString(), Name = "Tomato Soup" }
             };
             _recipeSearchUseCaseMock.Setup(service => service.ExecuteAsync(request, Recipe.Domain.Enums.RecipeSourceType.Internal)).ReturnsAsync(response);
 

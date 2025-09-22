@@ -29,7 +29,7 @@ public class GetRecipeUseCaseTests
         var recipeSourceType = RecipeSourceType.None;
         var expectedRecipe = new RecipeDetailResponse
         {
-            Id = recipeId,
+            Id = recipeId.ToString(),
             Name = "Test Recipe"
         };
 

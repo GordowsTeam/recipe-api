@@ -19,7 +19,8 @@ public class RecipeServiceFactory: IRecipeServiceFactory
     public IRecipeService CreateRecipeService(RecipeSourceType recipeSourceType)
     {
         return recipeSourceType switch {
-            RecipeSourceType.Internal => _serviceProvider.GetRequiredService<MockRecipeRepository>(),
+            RecipeSourceType.Internal => _serviceProvider.GetRequiredService<InternalRecipeService>(),
+            RecipeSourceType.Mock => _serviceProvider.GetRequiredService<MockRecipeRepository>(),
             RecipeSourceType.Edamame => _serviceProvider.GetRequiredService<EdamameRecipeService>(),
             RecipeSourceType.Spoonacular => _serviceProvider.GetRequiredService<SpoonacularRecipeService>(),
             _ => throw new ArgumentException("unkown source type")

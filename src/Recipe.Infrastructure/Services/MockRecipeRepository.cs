@@ -9,9 +9,10 @@ public class MockRecipeRepository : IRecipeService
     {
         var recipes = new List<RecipeListResponse>() { new ()
         {
+            Id = Guid.NewGuid().ToString(),
             Name = "Pasta 14",
             Images = new List<Application.Dtos.Image>() { new() { Url = "https://cdn.apartmenttherapy.info/image/upload/f_jpg,q_auto:eco,c_fill,g_auto,w_1500,ar_1:1/k%2FPhoto%2FRecipes%2F2023-01-Caramelized-Tomato-Paste-Pasta%2F06-CARAMELIZED-TOMATO-PASTE-PASTA-039", Main = true } },
-            RecipeSourceType = RecipeSourceType.Internal
+            RecipeSourceType = RecipeSourceType.Mock
         } };
         return Task.FromResult<IEnumerable<RecipeListResponse>>(recipes)!;
     }
@@ -20,10 +21,10 @@ public class MockRecipeRepository : IRecipeService
     {
         var recipe = new RecipeDetailResponse()
         {
-            Id = 1,
+            Id = 1.ToString(),
             Name = "Pasta 14",
             Images = new List<Image>() { new() { Url = "https://cdn.apartmenttherapy.info/image/upload/f_jpg,q_auto:eco,c_fill,g_auto,w_1500,ar_1:1/k%2FPhoto%2FRecipes%2F2023-01-Caramelized-Tomato-Paste-Pasta%2F06-CARAMELIZED-TOMATO-PASTE-PASTA-039", Main = true } },
-            Ingredients = new List<Ingredient>() { new() { Text = "Pasta", Quantity = 1, Measure = "cup", Weight = 100, Food = "Pasta", FoodCategory = FoodCategory.None, FoodCategoryId = "1", Image = "https://www.example.com/pasta.jpg" } },
+            Ingredients = new List<Ingredient>() { new() { Text = "Pasta", Quantity = 1, Measure = "cup", Weight = 100, FoodCategory = FoodCategory.None, Image = "https://www.example.com/pasta.jpg" } },
             MissingIngredients = new List<string>() { "Tomato", "Cheese" },
             Calories = 100,
             TotalTime = 30,

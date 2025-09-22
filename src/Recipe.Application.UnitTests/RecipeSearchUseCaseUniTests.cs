@@ -32,8 +32,8 @@ public class RecipeSearchUseCaseTests
         var recipeSourceType = RecipeSourceType.None;
         var expectedRecipes = new List<RecipeListResponse>
         {
-            new() { Id = 1, Name = "Chicken Rice Bowl" },
-            new() { Id = 2, Name = "Chicken Fried Rice" }
+            new() { Id = 1.ToString(), Name = "Chicken Rice Bowl" },
+            new() { Id = 2.ToString(), Name = "Chicken Fried Rice" }
         };
 
         var recipeServiceMock = new Mock<IRecipeService>();
