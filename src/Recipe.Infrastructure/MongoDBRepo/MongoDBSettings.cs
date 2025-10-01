@@ -1,4 +1,4 @@
-﻿namespace Recipe.Infrastructure.Services
+﻿namespace Recipe.Infrastructure.MongoDBRepo
 {
     public class MongoDBSettings
     {

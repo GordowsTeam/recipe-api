@@ -8,6 +8,6 @@ namespace Recipe.Application.Interfaces
 {
     public interface IRecipeETLService
     {
-        public Task<bool> ProcessRecipesAsync(IEnumerable<string> ingredients, string language = "en");
+        public Task<bool> ProcessRecipesAsync(string language = "en");
     }
 }

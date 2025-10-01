@@ -1,6 +1,7 @@
 ﻿using Recipe.Application.Dtos;
 using Recipe.Application.Interfaces;
 using Recipe.Application.Services;
+using Recipe.Core.Models;
 using Recipe.Domain.Enums;
 
 namespace Recipe.Infrastructure.Services
@@ -12,31 +13,50 @@ namespace Recipe.Infrastructure.Services
         private readonly IRecipeRepository _recipeRepository;
         private readonly IGetRecipeUseCase _getRecipeUseCase;
         private readonly IDuplicateFinder _duplicateFinder;
+        private readonly IIngredientSearchPendingService _ingredientSearchPendingService;
 
-        public RecipeETLService(IRecipeSearchUseCase recipeSearchUseCase, 
+        public RecipeETLService(
+            IIngredientSearchPendingService ingredientSearchPendingService,
+            IRecipeSearchUseCase recipeSearchUseCase, 
             IGetRecipeUseCase getRecipeUseCase, 
             IAIEnricher aIEnricher, 
             IRecipeRepository recipeRepository,
             IDuplicateFinder duplicateFinder)
         {
             _recipeSearchUseCase = recipeSearchUseCase;
-            this._aIEnricher = aIEnricher;
-            this._recipeRepository = recipeRepository;
+            _aIEnricher = aIEnricher;
+            _recipeRepository = recipeRepository;
             _getRecipeUseCase = getRecipeUseCase;
             _duplicateFinder = duplicateFinder;
+            _ingredientSearchPendingService = ingredientSearchPendingService;
         }
 
-        public async Task<bool> ProcessRecipesAsync(IEnumerable<string> ingredients, string language = "en")
+        //TODO: Change the return instead of bool a Result<T> with more detailed information
+        public async Task<bool> ProcessRecipesAsync(string language = "en")
         {
-            foreach(var ingredient in ingredients)
+            var pendingRequests = await _ingredientSearchPendingService.GetPendingAsync(50);
+            foreach (var pendingRequest in pendingRequests)
             {
-                if (string.IsNullOrWhiteSpace(ingredient))
+                if (pendingRequest.Ingredients == null || 
+                    pendingRequest.Ingredients.Count == 0 ||
+                    pendingRequest.Ingredients.Any(string.IsNullOrEmpty))
                 {
-                    throw new ArgumentException("Ingredient cannot be null or empty");
+                    await _ingredientSearchPendingService.MarkFailedAsync(pendingRequest.Id, "Invalid ingredients");
                 }
+                await _ingredientSearchPendingService.MarkProcessingAsync(pendingRequest.Id);
+                await ProcessRecipe(pendingRequest);
+            }
+
+            return true;
+        }
+
+        private async Task ProcessRecipe(IngredientSearchPending ingredientSearchPending)
+        {
+            try
+            {
                 var recipeRequest = new RecipeRequest()
                 {
-                    Ingredients = new List<string>() { ingredient }
+                    Ingredients = ingredientSearchPending.Ingredients
                 };
                 var recipeDetailResponses = await GetRecipes(recipeRequest);
 
@@ -52,10 +72,13 @@ namespace Recipe.Infrastructure.Services
 
                     var enriched = await _aIEnricher.EnrichRecipeAsync(recipe);
                     await _recipeRepository.InsertRecipeAsync(enriched);
+                    await _ingredientSearchPendingService.MarkCompletedAsync(ingredientSearchPending.Id);
                 }
             }
-
-            return true;
+            catch(Exception exception) 
+            {
+                await _ingredientSearchPendingService.MarkFailedAsync(ingredientSearchPending.Id, exception.Message);
+            }
         }
 
         private async Task<List<RecipeDetailResponse>> GetRecipes(RecipeRequest recipeRequest)

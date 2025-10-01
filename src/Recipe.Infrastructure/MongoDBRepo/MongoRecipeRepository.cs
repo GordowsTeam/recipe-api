@@ -2,7 +2,7 @@
 using Recipe.Application.Dtos;
 using Recipe.Application.Interfaces;
 
-namespace Recipe.Infrastructure.Services
+namespace Recipe.Infrastructure.MongoDBRepo
 {
     public class MongoRecipeRepository : IRecipeRepository
     {
