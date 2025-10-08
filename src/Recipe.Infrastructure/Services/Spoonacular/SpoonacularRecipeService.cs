@@ -39,7 +39,7 @@ public class SpoonacularRecipeService: IRecipeService
             var requestUri = $"{searchEndpoint}?" +
                 $"apiKey={_spoonacularApiSettings.ApiKey}" +
                 $"&query={GetIngredients(request.Ingredients)}" +
-                $"&number=1";
+                $"&number={request.NumberOfRecipes}";
             
             var response = await httpClient.GetAsync(requestUri);
             var responseBody = await response.Content.ReadAsStringAsync();

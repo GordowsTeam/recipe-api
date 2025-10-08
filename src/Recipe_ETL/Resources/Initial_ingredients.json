@@ -1,0 +1,502 @@
+[
+  {
+    "Id": 1,
+    "Name": "Salt",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 2,
+    "Name": "Sugar",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 3,
+    "Name": "Olive Oil",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 4,
+    "Name": "Butter",
+    "FoodCategory": "Dairy"
+  },
+  {
+    "Id": 5,
+    "Name": "Garlic",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 6,
+    "Name": "Onion",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 7,
+    "Name": "Tomato",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 8,
+    "Name": "Eggs",
+    "FoodCategory": "Dairy"
+  },
+  {
+    "Id": 9,
+    "Name": "Milk",
+    "FoodCategory": "Dairy"
+  },
+  {
+    "Id": 10,
+    "Name": "Flour",
+    "FoodCategory": "GrainsAndLegumes"
+  },
+  {
+    "Id": 11,
+    "Name": "Black Pepper",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 12,
+    "Name": "Chicken Breast",
+    "FoodCategory": "Meat"
+  },
+  {
+    "Id": 13,
+    "Name": "Rice",
+    "FoodCategory": "GrainsAndLegumes"
+  },
+  {
+    "Id": 14,
+    "Name": "Cheese",
+    "FoodCategory": "Dairy"
+  },
+  {
+    "Id": 15,
+    "Name": "Carrot",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 16,
+    "Name": "Potato",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 17,
+    "Name": "Lemon",
+    "FoodCategory": "Fruits"
+  },
+  {
+    "Id": 18,
+    "Name": "Vinegar",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 19,
+    "Name": "Soy Sauce",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 20,
+    "Name": "Honey",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 21,
+    "Name": "Beef",
+    "FoodCategory": "Meat"
+  },
+  {
+    "Id": 22,
+    "Name": "Pasta",
+    "FoodCategory": "GrainsAndLegumes"
+  },
+  {
+    "Id": 23,
+    "Name": "Bell Pepper",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 24,
+    "Name": "Basil",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 25,
+    "Name": "Parsley",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 26,
+    "Name": "Oregano",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 27,
+    "Name": "Thyme",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 28,
+    "Name": "Cilantro",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 29,
+    "Name": "Cumin",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 30,
+    "Name": "Chili Powder",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 31,
+    "Name": "Paprika",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 32,
+    "Name": "Ginger",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 33,
+    "Name": "Cinnamon",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 34,
+    "Name": "Nutmeg",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 35,
+    "Name": "Cocoa Powder",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 36,
+    "Name": "Vanilla Extract",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 37,
+    "Name": "Yeast",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 38,
+    "Name": "Baking Powder",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 39,
+    "Name": "Baking Soda",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 40,
+    "Name": "Brown Sugar",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 41,
+    "Name": "Spinach",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 42,
+    "Name": "Broccoli",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 43,
+    "Name": "Zucchini",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 44,
+    "Name": "Mushrooms",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 45,
+    "Name": "Cucumber",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 46,
+    "Name": "Lettuce",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 47,
+    "Name": "Apple",
+    "FoodCategory": "Fruits"
+  },
+  {
+    "Id": 48,
+    "Name": "Banana",
+    "FoodCategory": "Fruits"
+  },
+  {
+    "Id": 49,
+    "Name": "Strawberry",
+    "FoodCategory": "Fruits"
+  },
+  {
+    "Id": 50,
+    "Name": "Blueberry",
+    "FoodCategory": "Fruits"
+  },
+  {
+    "Id": 51,
+    "Name": "Orange",
+    "FoodCategory": "Fruits"
+  },
+  {
+    "Id": 52,
+    "Name": "Grapes",
+    "FoodCategory": "Fruits"
+  },
+  {
+    "Id": 53,
+    "Name": "Pineapple",
+    "FoodCategory": "Fruits"
+  },
+  {
+    "Id": 54,
+    "Name": "Mango",
+    "FoodCategory": "Fruits"
+  },
+  {
+    "Id": 55,
+    "Name": "Avocado",
+    "FoodCategory": "Fruits"
+  },
+  {
+    "Id": 56,
+    "Name": "Lime",
+    "FoodCategory": "Fruits"
+  },
+  {
+    "Id": 57,
+    "Name": "Peanut Butter",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 58,
+    "Name": "Almonds",
+    "FoodCategory": "GrainsAndLegumes"
+  },
+  {
+    "Id": 59,
+    "Name": "Walnuts",
+    "FoodCategory": "GrainsAndLegumes"
+  },
+  {
+    "Id": 60,
+    "Name": "Cashews",
+    "FoodCategory": "GrainsAndLegumes"
+  },
+  {
+    "Id": 61,
+    "Name": "Sunflower Seeds",
+    "FoodCategory": "GrainsAndLegumes"
+  },
+  {
+    "Id": 62,
+    "Name": "Chickpeas",
+    "FoodCategory": "GrainsAndLegumes"
+  },
+  {
+    "Id": 63,
+    "Name": "Lentils",
+    "FoodCategory": "GrainsAndLegumes"
+  },
+  {
+    "Id": 64,
+    "Name": "Kidney Beans",
+    "FoodCategory": "GrainsAndLegumes"
+  },
+  {
+    "Id": 65,
+    "Name": "Black Beans",
+    "FoodCategory": "GrainsAndLegumes"
+  },
+  {
+    "Id": 66,
+    "Name": "Corn",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 67,
+    "Name": "Cabbage",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 68,
+    "Name": "Cauliflower",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 69,
+    "Name": "Celery",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 70,
+    "Name": "Green Beans",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 71,
+    "Name": "Peas",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 72,
+    "Name": "Shrimp",
+    "FoodCategory": "Seafood"
+  },
+  {
+    "Id": 73,
+    "Name": "Fish (Salmon)",
+    "FoodCategory": "Seafood"
+  },
+  {
+    "Id": 74,
+    "Name": "Fish (Tuna)",
+    "FoodCategory": "Seafood"
+  },
+  {
+    "Id": 75,
+    "Name": "Pork",
+    "FoodCategory": "Meat"
+  },
+  {
+    "Id": 76,
+    "Name": "Turkey",
+    "FoodCategory": "Meat"
+  },
+  {
+    "Id": 77,
+    "Name": "Cream",
+    "FoodCategory": "Dairy"
+  },
+  {
+    "Id": 78,
+    "Name": "Yogurt",
+    "FoodCategory": "Dairy"
+  },
+  {
+    "Id": 79,
+    "Name": "Parmesan",
+    "FoodCategory": "Dairy"
+  },
+  {
+    "Id": 80,
+    "Name": "Mozzarella",
+    "FoodCategory": "Dairy"
+  },
+  {
+    "Id": 81,
+    "Name": "Cheddar",
+    "FoodCategory": "Dairy"
+  },
+  {
+    "Id": 82,
+    "Name": "Tomato Paste",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 83,
+    "Name": "Tomato Sauce",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 84,
+    "Name": "Ketchup",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 85,
+    "Name": "Mustard",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 86,
+    "Name": "Mayonnaise",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 87,
+    "Name": "Chili Peppers",
+    "FoodCategory": "Vegetables"
+  },
+  {
+    "Id": 88,
+    "Name": "Curry Powder",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 89,
+    "Name": "Turmeric",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 90,
+    "Name": "Rosemary",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 91,
+    "Name": "Sage",
+    "FoodCategory": "SpicesAndHerbs"
+  },
+  {
+    "Id": 92,
+    "Name": "Sesame Oil",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 93,
+    "Name": "Coconut Milk",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 94,
+    "Name": "Coconut",
+    "FoodCategory": "Fruits"
+  },
+  {
+    "Id": 95,
+    "Name": "Oats",
+    "FoodCategory": "GrainsAndLegumes"
+  },
+  {
+    "Id": 96,
+    "Name": "Maple Syrup",
+    "FoodCategory": "CondimentsAndSauces"
+  },
+  {
+    "Id": 97,
+    "Name": "Bread",
+    "FoodCategory": "GrainsAndLegumes"
+  },
+  {
+    "Id": 98,
+    "Name": "Tortilla",
+    "FoodCategory": "GrainsAndLegumes"
+  },
+  {
+    "Id": 99,
+    "Name": "Noodles",
+    "FoodCategory": "GrainsAndLegumes"
+  },
+  {
+    "Id": 100,
+    "Name": "Water",
+    "FoodCategory": "Other"
+  }
+]

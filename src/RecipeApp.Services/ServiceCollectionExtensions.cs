@@ -50,6 +50,7 @@ namespace RecipeApp.Services
             services.AddScoped<IGetRecipeUseCase, GetRecipeUseCase>();
             services.AddScoped<IDuplicateFinder, DuplicateFinder>();
             services.AddScoped<IIngredientSearchPendingService, IngredientSearchPendingService>();
+            services.AddScoped<IIngredientService, IngredientService>();
 
             return services;//for chaining the services builder.Services.AddRecipeAppServices(mongoConnection, dbName).AddControllers().AddSwaggerGen();
         }

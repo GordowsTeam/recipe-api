@@ -56,7 +56,8 @@ namespace Recipe.Infrastructure.Services
             {
                 var recipeRequest = new RecipeRequest()
                 {
-                    Ingredients = ingredientSearchPending.Ingredients
+                    Ingredients = ingredientSearchPending.Ingredients,
+                    NumberOfRecipes = 10
                 };
                 var recipeDetailResponses = await GetRecipes(recipeRequest);
 

@@ -12,4 +12,5 @@ public class RecipeRequest
     public string? Name { get; set; }
     public IEnumerable<string>? CuisineTypes { get; set; }
     public IEnumerable<string>? MealTypes { get; set; }
+    public int NumberOfRecipes { get; set; } = 10;
 }

@@ -18,18 +18,16 @@ namespace Recipe_ETL
                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                     .Build();
 
-                //Setup Dependency Injection
+                // Setup Dependency Injection
                 var services = new ServiceCollection();
                 var serviceProvider = services.AddRecipeAppServices(configuration).BuildServiceProvider();
-
-                //var searchPendingService = serviceProvider.GetRequiredService<IIngredientSearchPendingService>();
-                //var ingredientSerachPendingList = new List<List<string>>() {
-                //    new List<string>() { "chicken", "pepper" },
-                //    new List<string>(){"beans"} };
-                //foreach (var ingredients in ingredientSerachPendingList)
-                //{
-                //    await searchPendingService.AddSearchRequestAsync(ingredients);
-                //}
+                if(configuration.GetSection("LoadInitialIngredients").Get<bool>())
+                {
+                    // Optional: Initial Load
+                    var ingredientSearchPendingService = serviceProvider.GetRequiredService<IIngredientSearchPendingService>();
+                    var ingredientService = serviceProvider.GetRequiredService<IIngredientService>();
+                    await InitialLoad(ingredientSearchPendingService, ingredientService);
+                }
 
                 // Run the ETL process
                 var etlService = serviceProvider.GetRequiredService<IRecipeETLService>();
@@ -38,6 +36,22 @@ namespace Recipe_ETL
             catch(Exception ex)
             {
                 Console.WriteLine($"There was an exception in the main program: {ex.Message}");
+            }
+        }
+
+        public static async Task InitialLoad(IIngredientSearchPendingService ingredientSearchPendingService, IIngredientService ingredientService) 
+        {
+            //Read from json file or other source
+            var path = Path.Combine(AppContext.BaseDirectory, "Resources", "Initial_ingredients.json");
+            var ingredients = await ingredientService.LoadFromFile(path);
+            foreach(var ingredient in ingredients)
+            {
+                if (string.IsNullOrEmpty(ingredient.Name))
+                {
+                    continue;
+                }
+                await ingredientSearchPendingService.AddSearchRequestAsync(new List<string>() { ingredient.Name });
+
             }
         }
     }
