@@ -10,6 +10,8 @@ using Recipe.Infrastructure.MongoDBRepo;
 using Recipe.Infrastructure.Services.Edamame;
 using Recipe.Infrastructure.Services.Spoonacular;
 using Recipe.Infrastructure.Services;
+using Recipe.Infrastructure.Services.OpenAI;
+using OpenAI;
 
 namespace RecipeApp.Services
 {
@@ -38,7 +40,20 @@ namespace RecipeApp.Services
             services.AddScoped<IIngredientSearchPendingRepository, IngredientSearchPendingRepository>();
 
             //AI services
-            services.AddScoped<IAIEnricher, OpenAIEnricher>();
+            services.AddScoped<IAIEnricher, AIEnricher>();
+            var openAISettings = configuration.GetSection("OpenAISettings").Get<OpenAISettings>() ?? throw new ApplicationException("OpenAI APIKey is not set");
+            services.AddSingleton(sp => 
+            {
+                return new OpenAIClient(openAISettings.ApiKey);
+            });
+            services.AddSingleton<IChatModel>(sp =>
+            {
+                var client = sp.GetRequiredService<OpenAIClient>();
+                var chatClient = client.GetChatClient("gpt-4o-mini"); // replace with your model
+                return new OpenAIChatModel(chatClient);
+            });
+
+
             //services.AddSingleton(sp => new OpenAIClient(new OpenAIAuthentication("your-api-key")));
 
             // Application services

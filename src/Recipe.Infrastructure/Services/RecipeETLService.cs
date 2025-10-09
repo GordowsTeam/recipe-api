@@ -113,9 +113,11 @@ namespace Recipe.Infrastructure.Services
                 }
                 catch (ArgumentException ex)
                 {
+                    Console.WriteLine(ex.Message);
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                 }
             }
             return recipeResponse;

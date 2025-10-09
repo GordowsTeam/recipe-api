@@ -14,5 +14,6 @@ namespace Recipe.Domain.Models
         public IEnumerable<string>? MealTypes { get; set; }
         public IEnumerable<Direction>? Directions { get; set; }
         public RecipeSourceType RecipeSourceType { get; set; }
+        public bool AIEnriched { get; set; }
     }
 }
