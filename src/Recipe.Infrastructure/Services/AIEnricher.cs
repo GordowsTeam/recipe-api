@@ -40,7 +40,7 @@ Recipe to enrich: {rawRecipe}";
 
             try
             {
-                var enriched = DeserializeSafe(resultText);
+                var enriched = DeserializerHelper.DeserializeSafe<Domain.Models.Recipe>(resultText);
 
                 return MergeRecipes(recipe, enriched!);
             }
@@ -48,40 +48,6 @@ Recipe to enrich: {rawRecipe}";
             {
                 // Log deserialization error
                 return recipe;
-            }
-        }
-
-        /// <summary>
-        /// Safely deserialize AI JSON response, stripping extra quotes or markdown
-        /// </summary>
-        private static Domain.Models.Recipe? DeserializeSafe(string aiResponse)
-        {
-            if (string.IsNullOrWhiteSpace(aiResponse))
-                return null;
-
-            // Remove Markdown code fences ```json ... ```
-            if (aiResponse.StartsWith("```"))
-            {
-                var firstLine = aiResponse.IndexOf("\n");
-                if (firstLine >= 0)
-                    aiResponse = aiResponse.Substring(firstLine + 1);
-                aiResponse = aiResponse.TrimEnd('`').Trim();
-            }
-
-            // Remove leading/trailing quotes if present
-            aiResponse = aiResponse.Trim().Trim('"');
-
-            try
-            {
-                return JsonSerializer.Deserialize<Domain.Models.Recipe>(aiResponse, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-            }
-            catch (JsonException ex)
-            {
-                Console.WriteLine("JSON deserialization failed: " + ex.Message);
-                return null;
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Recipe.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Recipe.Application.Interfaces
 {
     public interface IRecipeETLService
     {
-        public Task<bool> ProcessRecipesAsync(string language = "en");
+        public Task<bool> ProcessRecipesAsync(Language language = Language.Spanish);
     }
 }

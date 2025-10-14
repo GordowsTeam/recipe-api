@@ -1,4 +1,6 @@
-﻿using Recipe.Domain.Enums;
+﻿using Recipe.Core.Enums;
+using Recipe.Core.Models;
+using Recipe.Domain.Enums;
 
 namespace Recipe.Domain.Models
 {
@@ -15,5 +17,8 @@ namespace Recipe.Domain.Models
         public IEnumerable<Direction>? Directions { get; set; }
         public RecipeSourceType RecipeSourceType { get; set; }
         public bool AIEnriched { get; set; }
+        public Language SourceLanguage { get; set; } = Language.English;
+        public Language Language { get; set; } = Language.English;
+        public Dictionary<Language, RecipeTranslation>? Translations { get; set; } = new();
     }
 }

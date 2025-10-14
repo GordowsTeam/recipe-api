@@ -1,6 +1,7 @@
 ﻿using Recipe.Application.Dtos;
 using Recipe.Application.Interfaces;
 using Recipe.Application.Services;
+using Recipe.Core.Enums;
 using Recipe.Core.Models;
 using Recipe.Domain.Enums;
 
@@ -14,6 +15,7 @@ namespace Recipe.Infrastructure.Services
         private readonly IGetRecipeUseCase _getRecipeUseCase;
         private readonly IDuplicateFinder _duplicateFinder;
         private readonly IIngredientSearchPendingService _ingredientSearchPendingService;
+        private readonly IRecipeTranslationService _recipeTranslationService;
 
         public RecipeETLService(
             IIngredientSearchPendingService ingredientSearchPendingService,
@@ -21,7 +23,8 @@ namespace Recipe.Infrastructure.Services
             IGetRecipeUseCase getRecipeUseCase, 
             IAIEnricher aIEnricher, 
             IRecipeRepository recipeRepository,
-            IDuplicateFinder duplicateFinder)
+            IDuplicateFinder duplicateFinder,
+            IRecipeTranslationService recipeTranslationService)
         {
             _recipeSearchUseCase = recipeSearchUseCase;
             _aIEnricher = aIEnricher;
@@ -29,10 +32,11 @@ namespace Recipe.Infrastructure.Services
             _getRecipeUseCase = getRecipeUseCase;
             _duplicateFinder = duplicateFinder;
             _ingredientSearchPendingService = ingredientSearchPendingService;
+            _recipeTranslationService = recipeTranslationService;
         }
 
         //TODO: Change the return instead of bool a Result<T> with more detailed information
-        public async Task<bool> ProcessRecipesAsync(string language = "en")
+        public async Task<bool> ProcessRecipesAsync(Language language = Language.Spanish)
         {
             var pendingRequests = await _ingredientSearchPendingService.GetPendingAsync(50);
             foreach (var pendingRequest in pendingRequests)
@@ -44,13 +48,13 @@ namespace Recipe.Infrastructure.Services
                     await _ingredientSearchPendingService.MarkFailedAsync(pendingRequest.Id, "Invalid ingredients");
                 }
                 await _ingredientSearchPendingService.MarkProcessingAsync(pendingRequest.Id);
-                await ProcessRecipe(pendingRequest);
+                await ProcessRecipe(pendingRequest, language);
             }
 
             return true;
         }
 
-        private async Task ProcessRecipe(IngredientSearchPending ingredientSearchPending)
+        private async Task ProcessRecipe(IngredientSearchPending ingredientSearchPending, Language language)
         {
             try
             {
@@ -72,6 +76,11 @@ namespace Recipe.Infrastructure.Services
                     }
 
                     var enriched = await _aIEnricher.EnrichRecipeAsync(recipe);
+                    var translated = await _recipeTranslationService.TranslateRecipeAsync(enriched, language);
+                    enriched.Translations = new Dictionary<Language, RecipeTranslation>
+                    {
+                        { language, translated! }
+                    };
                     await _recipeRepository.InsertRecipeAsync(enriched);
                     await _ingredientSearchPendingService.MarkCompletedAsync(ingredientSearchPending.Id);
                 }

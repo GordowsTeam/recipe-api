@@ -12,6 +12,9 @@ using Recipe.Infrastructure.Services.Spoonacular;
 using Recipe.Infrastructure.Services;
 using Recipe.Infrastructure.Services.OpenAI;
 using OpenAI;
+using Recipe.Core.Enums;
+using Recipe.Core.Models;
+using MongoDB.Bson.Serialization.Options;
 
 namespace RecipeApp.Services
 {
@@ -33,6 +36,15 @@ namespace RecipeApp.Services
 
             // MongoDB settings
             BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+            BsonClassMap.RegisterClassMap<Recipe.Domain.Models.Recipe>(cm =>
+            {
+                cm.AutoMap();
+                cm.MapMember(c => c.Translations)
+                  .SetSerializer(new DictionaryInterfaceImplementerSerializer<Dictionary<Language, RecipeTranslation>>(
+                      DictionaryRepresentation.Document,
+                      new EnumSerializer<Language>(BsonType.String),
+                      BsonSerializer.LookupSerializer<RecipeTranslation>()));
+            });
             var mongodbSettings = configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>() ?? throw new ApplicationException("MongoDB connection string is not set");
             services.AddSingleton<IMongoClient>(sp => new MongoClient(mongodbSettings.ConnectionString));
             services.AddSingleton(sp => sp.GetRequiredService<IMongoClient>().GetDatabase(mongodbSettings.DatabaseName));
@@ -41,6 +53,7 @@ namespace RecipeApp.Services
 
             //AI services
             services.AddScoped<IAIEnricher, AIEnricher>();
+            services.AddScoped<IRecipeTranslationService, RecipeTranslationService>();
             var openAISettings = configuration.GetSection("OpenAISettings").Get<OpenAISettings>() ?? throw new ApplicationException("OpenAI APIKey is not set");
             services.AddSingleton(sp => 
             {

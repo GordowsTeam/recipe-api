@@ -31,7 +31,7 @@ namespace Recipe_ETL
 
                 // Run the ETL process
                 var etlService = serviceProvider.GetRequiredService<IRecipeETLService>();
-                await etlService.ProcessRecipesAsync("en");
+                await etlService.ProcessRecipesAsync(Recipe.Core.Enums.Language.Spanish);
             }
             catch(Exception ex)
             {
