@@ -41,7 +41,7 @@ namespace RecipeAPI.UnitTests
             // Assert
             var actionResult = Assert.IsType<ActionResult<RecipeListResponse>>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
-            Assert.Equal("Invalid request. Ingredients are required.", badRequestResult.Value);
+            Assert.Equal("Invalid request:At least one filter must be specified.", badRequestResult.Value);
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace RecipeAPI.UnitTests
             // Assert
             var actionResult = Assert.IsType<ActionResult<RecipeListResponse>>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
-            Assert.Equal("Invalid request. Ingredients are required.", badRequestResult.Value);
+            Assert.Equal("Invalid request:At least one filter must be specified.", badRequestResult.Value);
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace RecipeAPI.UnitTests
             // Assert
             var actionResult = Assert.IsType<ActionResult<RecipeListResponse>>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
-            Assert.Equal("Invalid request. Ingredients are required.", badRequestResult.Value);
+            Assert.Equal("Invalid request:At least one filter must be specified.", badRequestResult.Value);
         }
 
         [Fact]

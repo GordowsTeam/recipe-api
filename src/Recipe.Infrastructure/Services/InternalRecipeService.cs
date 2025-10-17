@@ -45,7 +45,7 @@ namespace Recipe.Infrastructure.Services
                 RecipeSourceType = r.RecipeSourceType
             });
             
-            return recipeResponseList.Where(r => !string.IsNullOrEmpty(r.Name));
+            return recipeResponseList?.Where(r => !string.IsNullOrEmpty(r.Name));
         }
 
         private string? GetName(Domain.Models.Recipe recipe, Language language) 

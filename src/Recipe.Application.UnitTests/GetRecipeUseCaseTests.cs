@@ -43,7 +43,7 @@ public class GetRecipeUseCaseTests
             .Returns(recipeServiceMock.Object);
 
         // Act
-        var result = await _useCase.ExecuteAsync(recipeId.ToString(), recipeSourceType);
+        var result = await _useCase.ExecuteAsync(recipeId.ToString(), recipeSourceType, Core.Enums.Language.None);
 
         // Assert
         Assert.NotNull(result);
@@ -62,7 +62,7 @@ public class GetRecipeUseCaseTests
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(() =>
-            _useCase.ExecuteAsync(recipeId!, recipeSourceType));
+            _useCase.ExecuteAsync(recipeId!, recipeSourceType, Core.Enums.Language.None));
     }
 
     [Fact]
@@ -74,7 +74,7 @@ public class GetRecipeUseCaseTests
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(() =>
-            _useCase.ExecuteAsync(recipeId, recipeSourceType));
+            _useCase.ExecuteAsync(recipeId, recipeSourceType, Core.Enums.Language.None));
     }
 
     [Fact]
@@ -94,7 +94,7 @@ public class GetRecipeUseCaseTests
             .Returns(recipeServiceMock.Object);
 
         // Act
-        var result = await _useCase.ExecuteAsync(recipeId, recipeSourceType);
+        var result = await _useCase.ExecuteAsync(recipeId, recipeSourceType, Core.Enums.Language.None);
 
         // Assert
         Assert.Null(result);
@@ -121,7 +121,7 @@ public class GetRecipeUseCaseTests
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<Exception>(() =>
-            _useCase.ExecuteAsync(recipeId, recipeSourceType));
+            _useCase.ExecuteAsync(recipeId, recipeSourceType, Core.Enums.Language.None));
         Assert.Equal(expectedException.Message, exception.Message);
         _recipeServiceFactoryMock.Verify(x => x.CreateRecipeService(recipeSourceType), Times.Once);
         recipeServiceMock.Verify(x => x.GetRecipeByIdAsync(recipeId, Core.Enums.Language.Spanish), Times.Once);
