@@ -22,16 +22,18 @@ namespace Recipe.Infrastructure.MongoDBRepo
         {
             var filterBuilder = Builders<Domain.Models.Recipe>.Filter;
             var filter = filterBuilder.Empty;
-
+            var language = recipeRequest.Language.ToString();
+            
             if (recipeRequest.Name != null)
             {
-                filter &= filterBuilder.Regex(r => r.Name, new MongoDB.Bson.BsonRegularExpression(recipeRequest.Name, "i"));
+                var fieldName = $"Translations.{language}.Name";
+                filter &= filterBuilder.Regex(fieldName, new MongoDB.Bson.BsonRegularExpression(recipeRequest.Name, "i"));
             }
 
             if (recipeRequest.Ingredients != null && recipeRequest.Ingredients.Any())
             {
                 var regexFilters = recipeRequest.Ingredients
-                           .Select(name => filterBuilder.Regex("Ingredients.Name", new MongoDB.Bson.BsonRegularExpression(name, "i")))
+                           .Select(name => filterBuilder.Regex($"Translations.{language}.Ingredients.Name", new MongoDB.Bson.BsonRegularExpression(name, "i")))
                            .ToList();
 
                 filter &= recipeRequest.MatchAllIngredients

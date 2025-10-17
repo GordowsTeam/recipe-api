@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Recipe.Application.Dtos;
 using Recipe.Application.Interfaces;
+using Recipe.Core.Enums;
 using Recipe.Infrastructure.Services.Edamame.Dtos;
 
 namespace Recipe.Infrastructure.Services.Edamame;
@@ -58,7 +59,7 @@ public class EdamameRecipeService: IRecipeService
         }
     }
 
-    public Task<RecipeDetailResponse?> GetRecipeByIdAsync(string id)
+    public Task<RecipeDetailResponse?> GetRecipeByIdAsync(string id, Language language = Language.None)
     {
         throw new NotImplementedException();
     }

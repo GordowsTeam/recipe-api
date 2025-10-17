@@ -8,6 +8,6 @@ namespace Recipe.Application.Dtos
 {
     public class InitialIngredient
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }

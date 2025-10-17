@@ -4,7 +4,7 @@ namespace Recipe.Application.Dtos
 {
     public class RecipeDetailResponse
     {
-        public string Id { get; set; }
+        public string? Id { get; set; }
         public required string Name { get; set; }
         public IEnumerable<Image>? Images { get; set; }
         public IEnumerable<Ingredient>? Ingredients { get; set; }
@@ -24,14 +24,24 @@ namespace Recipe.Application.Dtos
             return new Domain.Models.Recipe
             {
                 Id = Guid.NewGuid(),
-                Name = recipeDetailResponse.Name,
+                Translations = new Dictionary<Core.Enums.Language, Core.Models.RecipeTranslation>
+                {
+                    {
+                        Core.Enums.Language.English,
+                        new Core.Models.RecipeTranslation
+                        {
+                            Language = Core.Enums.Language.English,
+                            Name = recipeDetailResponse.Name,
+                            CuisinTypes = recipeDetailResponse.CuisinTypes,
+                            MealTypes = recipeDetailResponse.MealTypes,
+                            Directions = recipeDetailResponse.Directions?.Select(d => d.ToDirection()),
+                            Ingredients = recipeDetailResponse.Ingredients?.Select(i => i.ToIngredient())
+                        }
+                    }
+                },
                 Images = recipeDetailResponse.Images?.Select(i => i.ToImage()) ?? [],
-                Ingredients = recipeDetailResponse.Ingredients?.Select(i => i.ToIngredient()).ToList() ?? [],
                 Calories = recipeDetailResponse.Calories,
                 TotalTime = recipeDetailResponse.TotalTime,
-                CuisinTypes = recipeDetailResponse.CuisinTypes?.ToList() ?? [],
-                MealTypes = recipeDetailResponse.MealTypes?.ToList() ?? [],
-                Directions = recipeDetailResponse.Directions?.Select(d => d.ToDirection()).ToList() ?? [],
                 RecipeSourceType = recipeDetailResponse.RecipeSourceType
             };
         }

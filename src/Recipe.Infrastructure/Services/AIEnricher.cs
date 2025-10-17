@@ -2,6 +2,8 @@
 using OpenAI.Chat;
 using System.Text.Json;
 using Recipe.Application.Helpers;
+using Recipe.Core.Enums;
+using Recipe.Core.Models;
 
 namespace Recipe.Infrastructure.Services
 {
@@ -56,14 +58,37 @@ Recipe to enrich: {rawRecipe}";
             if(enriched == null)
                 return original;
 
-            if (string.IsNullOrWhiteSpace(original.Name) && !string.IsNullOrWhiteSpace(enriched.Name))
-                original.Name = enriched.Name;
+            var language = Language.English; // For simplicity, we enrich only the English translation
+            var originalTranslation = original.Translations != null && original.Translations.TryGetValue(language, out var ot) ? ot : null;
+            // Ensure the translation exists for the given language
+            if (originalTranslation == null)
+            {
+                return original;
+            }
+
+            if (enriched?.Translations == null || !enriched.Translations.TryGetValue(language, out var enrichedTranslation))
+            {
+                // Nothing to merge for this language
+                return original;
+            }
+
+            // Merge fields in the translation
+            if (!string.IsNullOrWhiteSpace(originalTranslation?.Name) && !string.IsNullOrWhiteSpace(enrichedTranslation.Name))
+                originalTranslation.Name = enrichedTranslation.Name;
+
+            if (originalTranslation!.Ingredients == null || !originalTranslation.Ingredients.Any())
+                originalTranslation.Ingredients = enrichedTranslation.Ingredients;
+
+            if (originalTranslation.Directions == null || !originalTranslation.Directions.Any())
+                originalTranslation.Directions = enrichedTranslation.Directions;
+
+            if (originalTranslation.CuisinTypes == null && enrichedTranslation.CuisinTypes != null)
+                originalTranslation.CuisinTypes = enrichedTranslation.CuisinTypes;
+
+            if (originalTranslation.MealTypes == null || !originalTranslation.MealTypes.Any())
+                originalTranslation.MealTypes = enrichedTranslation.MealTypes;
 
             original.Images ??= enriched.Images;
-            original.Ingredients ??= enriched.Ingredients;
-            original.Directions ??= enriched.Directions;
-            original.CuisinTypes ??= enriched.CuisinTypes;
-            original.MealTypes ??= enriched.MealTypes;
 
             if (original.Calories == 0)
                 original.Calories = enriched.Calories;

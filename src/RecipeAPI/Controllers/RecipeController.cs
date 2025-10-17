@@ -5,6 +5,7 @@ using Recipe.Domain.Enums;
 using Recipe.Application.Services;
 using Recipe.Application.Dtos;
 using Recipe.Application.Validators;
+using Recipe.Core.Enums;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -31,7 +32,7 @@ namespace RecipeAPI.Controllers
 
         // GET api/<RecipeController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<RecipeListResponse>> Get(string id, [FromQuery] RecipeSourceType? recipeSourceType = null)
+        public async Task<ActionResult<RecipeListResponse>> Get(string id, [FromQuery] RecipeSourceType? recipeSourceType = null, [FromQuery] Language language = Language.Spanish)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -40,7 +41,7 @@ namespace RecipeAPI.Controllers
 
             try
             {
-                var recipe = await _getRecipeUseCase.ExecuteAsync(id, recipeSourceType.HasValue ? recipeSourceType.Value : RecipeSourceType.Internal);
+                var recipe = await _getRecipeUseCase.ExecuteAsync(id, recipeSourceType.HasValue ? recipeSourceType.Value : RecipeSourceType.Internal, language);
                 return Ok(recipe);
             }
             catch (Exception exception)

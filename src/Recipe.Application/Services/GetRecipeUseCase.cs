@@ -2,11 +2,12 @@ using Microsoft.Extensions.Logging;
 using Recipe.Application.Interfaces;
 using Recipe.Application.Dtos;
 using Recipe.Domain.Enums;
+using Recipe.Core.Enums;
 
 namespace Recipe.Application.Services;
 public interface IGetRecipeUseCase 
 {
-    Task<RecipeDetailResponse?> ExecuteAsync(string recipeId, RecipeSourceType recipeSourceType);
+    Task<RecipeDetailResponse?> ExecuteAsync(string recipeId, RecipeSourceType recipeSourceType, Language language);
 }
 
 public class GetRecipeUseCase: IGetRecipeUseCase
@@ -21,7 +22,7 @@ public class GetRecipeUseCase: IGetRecipeUseCase
         _logger = logger;
     }
     
-    public async Task<RecipeDetailResponse?> ExecuteAsync(string recipeId, RecipeSourceType recipeSourceType)
+    public async Task<RecipeDetailResponse?> ExecuteAsync(string recipeId, RecipeSourceType recipeSourceType, Language language)
     {
         if (string.IsNullOrEmpty(recipeId))
         {
@@ -29,7 +30,7 @@ public class GetRecipeUseCase: IGetRecipeUseCase
         }
 
         var service = _recipeServiceFactory.CreateRecipeService(recipeSourceType);
-        var result = await service.GetRecipeByIdAsync(recipeId);
+        var result = await service.GetRecipeByIdAsync(recipeId, language);
 
         return result;
     }

@@ -1,5 +1,6 @@
 using Recipe.Application.Dtos;
 using Recipe.Application.Interfaces;
+using Recipe.Core.Enums;
 using Recipe.Domain.Enums;
 
 namespace Recipe.Infrastructure.Services;
@@ -17,7 +18,7 @@ public class MockRecipeRepository : IRecipeService
         return Task.FromResult<IEnumerable<RecipeListResponse>>(recipes)!;
     }
 
-    public Task<RecipeDetailResponse?> GetRecipeByIdAsync(string id)
+    public Task<RecipeDetailResponse?> GetRecipeByIdAsync(string id, Language language = Language.English)
     {
         var recipe = new RecipeDetailResponse()
         {

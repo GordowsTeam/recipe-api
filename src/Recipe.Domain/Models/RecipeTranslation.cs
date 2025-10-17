@@ -10,5 +10,7 @@ namespace Recipe.Core.Models
         public IEnumerable<string>? CuisinTypes { get; set; }
         public IEnumerable<string>? MealTypes { get; set; }
         public IEnumerable<Direction>? Directions { get; set; }
+        public IEnumerable<Ingredient>? Ingredients { get; set; }
+
     }
 }

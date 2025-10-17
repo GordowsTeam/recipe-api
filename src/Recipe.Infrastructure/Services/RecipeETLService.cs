@@ -63,24 +63,21 @@ namespace Recipe.Infrastructure.Services
                     Ingredients = ingredientSearchPending.Ingredients,
                     NumberOfRecipes = 10
                 };
-                var recipeDetailResponses = await GetRecipes(recipeRequest);
+                var recipeDetailResponses = await GetRecipes(recipeRequest, language);
 
-                // TODO: Filter out recipes that already exist in the database
                 // Then enrich and store the new recipes
                 foreach (var recipeDetailResponse in recipeDetailResponses)
                 {
                     var recipe = recipeDetailResponse.ToRecipe();
-                    if (recipe == null || await _duplicateFinder.IsDuplicateAsync(recipe!))
+                    if (recipe == null || await _duplicateFinder.IsDuplicateAsync(recipe!, language))
                     {
                         continue;
                     }
 
                     var enriched = await _aIEnricher.EnrichRecipeAsync(recipe);
                     var translated = await _recipeTranslationService.TranslateRecipeAsync(enriched, language);
-                    enriched.Translations = new Dictionary<Language, RecipeTranslation>
-                    {
-                        { language, translated! }
-                    };
+                    AddTranslatedRecipe(language, enriched, translated);
+
                     await _recipeRepository.InsertRecipeAsync(enriched);
                     await _ingredientSearchPendingService.MarkCompletedAsync(ingredientSearchPending.Id);
                 }
@@ -91,7 +88,23 @@ namespace Recipe.Infrastructure.Services
             }
         }
 
-        private async Task<List<RecipeDetailResponse>> GetRecipes(RecipeRequest recipeRequest)
+        private static void AddTranslatedRecipe(Language language, Domain.Models.Recipe enriched, RecipeTranslation? translated)
+        {
+            if (translated == null || enriched == null)
+                return;
+
+            if (enriched.Translations != null && enriched.Translations.Any())
+                enriched.Translations.Add(language, translated);
+            else
+            {
+                enriched.Translations = new Dictionary<Core.Enums.Language, Core.Models.RecipeTranslation>
+                {
+                    { language, translated }
+                };
+            }
+        }
+
+        private async Task<List<RecipeDetailResponse>> GetRecipes(RecipeRequest recipeRequest, Language language)
         {
             var recipeResponse = new List<RecipeDetailResponse>();
             foreach (RecipeSourceType recipeSourceType in Enum.GetValues(typeof(RecipeSourceType)))
@@ -112,7 +125,7 @@ namespace Recipe.Infrastructure.Services
                     {
                         foreach(var r in response)
                         {
-                            var responseDetails = await _getRecipeUseCase.ExecuteAsync(r.Id.ToString(), recipeSourceType);
+                            var responseDetails = await _getRecipeUseCase.ExecuteAsync(r.Id.ToString(), recipeSourceType, language);
                             if (responseDetails != null)
                             {
                                 recipeResponse.Add(responseDetails);

@@ -1,8 +1,10 @@
+using Recipe.Core.Enums;
+
 namespace Recipe.Application.Dtos;
 
 public class RecipeRequest
 {
-    public RecipeRequest(IEnumerable<string> ingredients = null)
+    public RecipeRequest(IEnumerable<string>? ingredients = null)
     {
         Ingredients = ingredients;
     }
@@ -13,4 +15,5 @@ public class RecipeRequest
     public IEnumerable<string>? CuisineTypes { get; set; }
     public IEnumerable<string>? MealTypes { get; set; }
     public int NumberOfRecipes { get; set; } = 10;
+    public Language Language { get; set; } = Language.Spanish;
 }

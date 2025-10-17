@@ -6,6 +6,7 @@ using Recipe.Application.Interfaces;
 using Recipe.Domain.Enums;
 using Recipe.Application.Dtos;
 using Ingredient = Recipe.Application.Dtos.Ingredient;
+using Recipe.Core.Enums;
 
 namespace Recipe.Infrastructure.Services.Spoonacular;
 public class SpoonacularRecipeService: IRecipeService
@@ -95,7 +96,7 @@ public class SpoonacularRecipeService: IRecipeService
         return result;
     }
 
-    public async Task<RecipeDetailResponse?> GetRecipeByIdAsync(string id)
+    public async Task<RecipeDetailResponse?> GetRecipeByIdAsync(string id, Language language = Language.English)
     {
         try
         {

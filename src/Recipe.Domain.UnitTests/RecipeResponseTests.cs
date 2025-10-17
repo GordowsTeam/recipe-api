@@ -11,7 +11,6 @@ namespace Recipe.Domain.Tests.Models
         public void RecipeResponse_ShouldSetAndGetProperties()
         {
             // Arrange
-            var name = "Test Recipe";
             var images = new List<Image>
             {
                 new() { Url = "http://example.com/image.jpg", Main = true }
@@ -20,12 +19,10 @@ namespace Recipe.Domain.Tests.Models
             // Act
             var recipeResponse = new Domain.Models.Recipe
             {
-                Name = name,
                 Images = images
             };
 
             // Assert
-            Assert.Equal(name, recipeResponse.Name);
             Assert.Equal(images, recipeResponse.Images);
         }
     }
