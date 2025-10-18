@@ -18,7 +18,7 @@ public class MockRecipeRepository : IRecipeService
         return Task.FromResult<IEnumerable<RecipeListResponse>>(recipes)!;
     }
 
-    public Task<RecipeDetailResponse?> GetRecipeByIdAsync(string id, Language language = Language.English)
+    public Task<RecipeDetailResponse?> GetRecipeByIdAsync(string id, Language language = Language.Spanish)
     {
         var recipe = new RecipeDetailResponse()
         {
