@@ -1,0 +1,63 @@
+﻿using MongoDB.Driver;
+using Recipe.Application.Dtos;
+using Recipe.Application.Interfaces;
+
+namespace Recipe.Infrastructure.MongoDBRepo
+{
+    public class MongoRecipeRepository : IRecipeRepository
+    {
+        private readonly IMongoCollection<Domain.Models.Recipe> _collection;
+
+        public MongoRecipeRepository(IMongoDatabase database)
+        {
+            _collection = database.GetCollection<Domain.Models.Recipe>("recipes");
+        }
+
+        public async Task<Domain.Models.Recipe?> GetRecipeByIdAsync(Guid id)
+        {
+            return await _collection.Find(r => r.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Domain.Models.Recipe>?> GetRecipesAsync(RecipeRequest recipeRequest)
+        {
+            var filterBuilder = Builders<Domain.Models.Recipe>.Filter;
+            var filter = filterBuilder.Empty;
+            var language = recipeRequest.Language.ToString();
+            
+            if (recipeRequest.Name != null)
+            {
+                var fieldName = $"Translations.{language}.Name";
+                filter &= filterBuilder.Regex(fieldName, new MongoDB.Bson.BsonRegularExpression(recipeRequest.Name, "i"));
+            }
+
+            if (recipeRequest.Ingredients != null && recipeRequest.Ingredients.Any())
+            {
+                var regexFilters = recipeRequest.Ingredients
+                           .Select(name => filterBuilder.Regex($"Translations.{language}.Ingredients.Name", new MongoDB.Bson.BsonRegularExpression(name, "i")))
+                           .ToList();
+
+                filter &= recipeRequest.MatchAllIngredients
+                    ? filterBuilder.And(regexFilters)  // all ingredients
+                    : filterBuilder.Or(regexFilters);  // at least one ingredient
+            }
+
+            if (recipeRequest.CuisineTypes != null && recipeRequest.CuisineTypes.Any())
+            {
+                //filter &= filterBuilder.In(r => r.CuisinTypes, recipeFilters.CuisineTypes);
+            }
+
+            // Filter by meal types (at least one match)
+            if (recipeRequest.MealTypes != null && recipeRequest.MealTypes.Any())
+            {
+                //filter &= filterBuilder.In(r => r.MealTypes, recipeFilters.MealTypes);
+            }
+
+            var recipes = await _collection.Find(filter).ToListAsync();
+            var distinctRecipes = recipes.GroupBy(r => r.Id).Select(g => g.First()).ToList();
+            
+            return distinctRecipes;
+        }
+
+        public async Task InsertRecipeAsync(Domain.Models.Recipe recipe) => await _collection.InsertOneAsync(recipe);
+    }
+}

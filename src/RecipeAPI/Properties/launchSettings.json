@@ -6,7 +6,7 @@
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development",
             "edamame_active": "false",
-            "spoonacular_active": "true",
+            "spoonacular_active": "false",
             "internal_active": "true"
         },
       "applicationUrl": "https://localhost:56548;http://localhost:56549"

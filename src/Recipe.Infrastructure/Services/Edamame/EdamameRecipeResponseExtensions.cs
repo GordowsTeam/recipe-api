@@ -1,5 +1,6 @@
-﻿using Recipe.Core.Models;
-using Recipe.Core.Enums;
+﻿using Recipe.Domain.Enums;
+using Recipe.Application.Dtos;
+using Recipe.Infrastructure.Services.Edamame.Dtos;
 
 namespace Recipe.Infrastructure.Services.Edamame;
 public static class EdamameRecipeResponseExtensions
@@ -18,6 +19,7 @@ public static class EdamameRecipeResponseExtensions
             
             result.Add(new RecipeListResponse()
             {
+                Id = Guid.NewGuid().ToString(),
                 Name = edamameRecipe.Recipe.Label ?? string.Empty,
                 Images = [new() { Url = edamameRecipe.Recipe.Image ?? string.Empty, Main = true }],
                 //Ingredients = edamameRecipe.Recipe.Ingredients == null ? [] : edamameRecipe.Recipe.Ingredients.Select(l => new Ingredient() { Text = l.Text, Quantity = l.Quantity, Measure = l.Measure, Food = l.Food, Weight = l.Weight, Image = l.Image }),

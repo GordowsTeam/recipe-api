@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Recipe.Application.Constants;
+using Recipe.Application.Dtos;
 using Recipe.Application.Interfaces;
 using Recipe.Application.Services;
-using Recipe.Core.Models;
+using Recipe.Domain.Models;
 using RecipeAPI.Controllers;
 using Xunit;
 
@@ -40,7 +41,7 @@ namespace RecipeAPI.UnitTests
             // Assert
             var actionResult = Assert.IsType<ActionResult<RecipeListResponse>>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
-            Assert.Equal("Invalid request. Ingredients are required.", badRequestResult.Value);
+            Assert.Equal("Invalid request:At least one filter must be specified.", badRequestResult.Value);
         }
 
         [Fact]
@@ -55,7 +56,7 @@ namespace RecipeAPI.UnitTests
             // Assert
             var actionResult = Assert.IsType<ActionResult<RecipeListResponse>>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
-            Assert.Equal("Invalid request. Ingredients are required.", badRequestResult.Value);
+            Assert.Equal("Invalid request:At least one filter must be specified.", badRequestResult.Value);
         }
 
         [Fact]
@@ -70,7 +71,7 @@ namespace RecipeAPI.UnitTests
             // Assert
             var actionResult = Assert.IsType<ActionResult<RecipeListResponse>>(result);
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult.Result);
-            Assert.Equal("Invalid request. Ingredients are required.", badRequestResult.Value);
+            Assert.Equal("Invalid request:At least one filter must be specified.", badRequestResult.Value);
         }
 
         [Fact]
@@ -81,9 +82,9 @@ namespace RecipeAPI.UnitTests
             var request = new RecipeRequest { Ingredients = new List<string> { "Tomato", "Cheese" } };
             var response = new List<RecipeListResponse>
             {
-                new RecipeListResponse { Name = "Tomato Soup" }
+                new RecipeListResponse { Id = Guid.NewGuid().ToString(), Name = "Tomato Soup" }
             };
-            _recipeSearchUseCaseMock.Setup(service => service.ExecuteAsync(request, Recipe.Core.Enums.RecipeSourceType.Internal)).ReturnsAsync(response);
+            _recipeSearchUseCaseMock.Setup(service => service.ExecuteAsync(request, Recipe.Domain.Enums.RecipeSourceType.Internal)).ReturnsAsync(response);
 
             // Act
             var result = await _recipeController.Post(request, CancellationToken.None);
