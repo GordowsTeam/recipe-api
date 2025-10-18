@@ -271,6 +271,5 @@ terraform/recipe_api.zip
 terraform/api-gateway/.terraform.lock.hcl
 terraform/api-gateway/.terraform/providers/registry.terraform.io/hashicorp/aws/5.81.0/windows_386/LICENSE.txt
 terraform/api-gateway/.terraform/providers/registry.terraform.io/hashicorp/aws/5.81.0/windows_386/terraform-provider-aws_v5.81.0_x5.exe
-src/RecipeAPI/appsettings.Development.json
-src/RecipeAPI/appsettings.Development.json
-src/RecipeAPI/appsettings.Development.json
+src/RecipeAPI/appsettings.json
+src/Recipe_ETL/appsettings-Development.json

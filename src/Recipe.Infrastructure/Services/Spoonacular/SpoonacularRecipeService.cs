@@ -3,10 +3,10 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Recipe.Application.Interfaces;
-using Recipe.Core.Models;
+using Recipe.Domain.Enums;
+using Recipe.Application.Dtos;
+using Ingredient = Recipe.Application.Dtos.Ingredient;
 using Recipe.Core.Enums;
-using Recipe.Infrastructure.Services.Spoonacular;
-using Recipe.Infrastructure.Services.Edamame;
 
 namespace Recipe.Infrastructure.Services.Spoonacular;
 public class SpoonacularRecipeService: IRecipeService
@@ -30,7 +30,7 @@ public class SpoonacularRecipeService: IRecipeService
     {
         try
         {
-            if(request == null || request.Ingredients == null || !request.Ingredients.Any() || request.Ingredients.Any(l => string.IsNullOrEmpty(l)))
+            if (request == null || request.Ingredients == null || !request.Ingredients.Any() || request.Ingredients.Any(l => string.IsNullOrEmpty(l)))
             {
                 throw new ArgumentException("Ingredients cannot be null or empty", nameof(request.Ingredients));
             }
@@ -39,7 +39,8 @@ public class SpoonacularRecipeService: IRecipeService
             httpClient.BaseAddress = new Uri(_spoonacularApiSettings.Uri);
             var requestUri = $"{searchEndpoint}?" +
                 $"apiKey={_spoonacularApiSettings.ApiKey}" +
-                $"&query={request.Ingredients.FirstOrDefault()}";
+                $"&query={GetIngredients(request.Ingredients)}" +
+                $"&number={request.NumberOfRecipes}";
             
             var response = await httpClient.GetAsync(requestUri);
             var responseBody = await response.Content.ReadAsStringAsync();
@@ -71,6 +72,11 @@ public class SpoonacularRecipeService: IRecipeService
         }
     }
 
+    private string GetIngredients(IEnumerable<string> ingredients) 
+    {
+        return string.Join(",", ingredients.Select(i => "+" + i));
+    }
+
     private IEnumerable<RecipeListResponse> MapRecipeList(SpoonacularRecipeSearchResponse spoonacularRecipeSearchResponses)
     {
         var result = new List<RecipeListResponse>();
@@ -80,7 +86,7 @@ public class SpoonacularRecipeService: IRecipeService
             
             result.Add(new RecipeListResponse()
             {
-                Id = spoonacularRecipe.id,
+                Id = spoonacularRecipe.id.ToString(),
                 Name =  spoonacularRecipe.title ?? string.Empty,
                 Images = [new() { Url = spoonacularRecipe.image ?? string.Empty, Main = true }],
                 RecipeSourceType = RecipeSourceType.Spoonacular
@@ -90,7 +96,7 @@ public class SpoonacularRecipeService: IRecipeService
         return result;
     }
 
-    public async Task<RecipeDetailResponse?> GetRecipeByIdAsync(string id)
+    public async Task<RecipeDetailResponse?> GetRecipeByIdAsync(string id, Language language = Language.English)
     {
         try
         {
@@ -136,7 +142,7 @@ public class SpoonacularRecipeService: IRecipeService
     {
         var result = new RecipeDetailResponse 
         {
-            Id = spoonacularRecipeDetail.id,
+            Id = spoonacularRecipeDetail.id.ToString(),
             Name = spoonacularRecipeDetail.title ?? string.Empty,
             Images = [new() { Url = spoonacularRecipeDetail.image ?? string.Empty, Main = true }],
             Ingredients = spoonacularRecipeDetail.extendedIngredients == null ? [] : spoonacularRecipeDetail.extendedIngredients.Select(l => new Ingredient() { Text = l.name, Quantity = (decimal)l.amount!, Measure = l.unit, Image = l.image }),
@@ -146,7 +152,7 @@ public class SpoonacularRecipeService: IRecipeService
             CuisinTypes = spoonacularRecipeDetail.cuisines ?? [],
             MealTypes = spoonacularRecipeDetail.mealTypes ?? [],
             Directions = spoonacularRecipeDetail.analyzedInstructions != null && spoonacularRecipeDetail.analyzedInstructions.Any() ? 
-                spoonacularRecipeDetail.analyzedInstructions.First().steps.Select(step => new Direction() { Step =  step.number.ToString(), InstructionText = step.step }) 
+                spoonacularRecipeDetail.analyzedInstructions.First().steps.Select(step => new Application.Dtos.Direction() { Step =  step.number.ToString(), InstructionText = step.step }) 
                 : [],
             RecipeSourceType = RecipeSourceType.Spoonacular
         };

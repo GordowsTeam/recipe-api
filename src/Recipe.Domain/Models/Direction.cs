@@ -1,8 +1,9 @@
-﻿namespace Recipe.Core.Models;
-
-public class Direction
+﻿namespace Recipe.Domain.Models
 {
-    public string? Step { get; set; }
-    public string? Image { get; set; }
-    public string? InstructionText { get; set; }
+    public class Direction
+    {
+        public string? Step { get; set; }
+        public string? Image { get; set; }
+        public string? InstructionText { get; set; }
+    }
 }

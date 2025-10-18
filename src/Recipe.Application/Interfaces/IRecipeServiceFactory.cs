@@ -1,5 +1,4 @@
-using Recipe.Core.Enums;
-using Recipe.Application.Interfaces;
+using Recipe.Domain.Enums;
 
 namespace Recipe.Application.Interfaces;
 public interface IRecipeServiceFactory

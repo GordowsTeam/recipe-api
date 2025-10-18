@@ -9,9 +9,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Protected;
+using Recipe.Application.Dtos;
 using Recipe.Application.Interfaces;
-using Recipe.Core.Models;
+using Recipe.Domain.Models;
 using Recipe.Infrastructure.Services.Edamame;
+using Recipe.Infrastructure.Services.Edamame.Dtos;
 using Xunit;
 
 namespace Recipe.Infrastructure.Tests.Services.Edamame
