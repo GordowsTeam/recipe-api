@@ -90,7 +90,7 @@ jobs:
           sed -i 's|__APP-KEY__|${{ secrets.EDAMAME_APP_KEY }}|g' $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json
           sed -i 's|__API-KEY__|${{ secrets.SPOONACULAR_API_KEY }}|g' $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json
           sed -i 's|__CONNECTION-STRING__|${{ secrets.MONGODB__CONNECTION_STRING }}|g' $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json
-      
+          
       - name: Verify MongoDB connection string replacement (safe)
         run: |
           echo "Checking if connection string placeholder still exists..."
