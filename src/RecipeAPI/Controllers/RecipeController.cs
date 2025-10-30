@@ -83,6 +83,8 @@ namespace RecipeAPI.Controllers
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, $"An error occurred while processing the request. Source Type: { recipeSourceType.ToString() }");
+                    _logger.LogError(ex, $"Error Message: {ex.Message}");
+
                 }
             }
 
