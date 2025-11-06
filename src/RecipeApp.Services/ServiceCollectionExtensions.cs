@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Bson.Serialization;
@@ -15,6 +15,7 @@ using OpenAI;
 using Recipe.Core.Enums;
 using Recipe.Core.Models;
 using MongoDB.Bson.Serialization.Options;
+using DnsClient.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace RecipeApp.Services
@@ -49,8 +50,8 @@ namespace RecipeApp.Services
             var mongodbSettings = configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>() ?? throw new ApplicationException("MongoDB connection string is not set");
             services.AddSingleton<IMongoClient>(sp =>
             {
-                var logger = sp.GetRequiredService<ILogger>();
-                logger.LogInformation("Connecting to MongoDB at {ConnectionString}", mongodbSettings.ConnectionString);
+                var logger = sp.GetRequiredService<ILogger<MongoRecipeRepository>>();
+                logger.LogInformation($"Mongodb connection string {mongodbSettings.ConnectionString}");
                 return new MongoClient(mongodbSettings.ConnectionString);
             } );
             services.AddSingleton(sp => sp.GetRequiredService<IMongoClient>().GetDatabase(mongodbSettings.DatabaseName));
