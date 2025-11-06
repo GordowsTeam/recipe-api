@@ -96,13 +96,16 @@ jobs:
           api_key="${{ secrets.SPOONACULAR_API_KEY }}"
           mongo_uri="${{ secrets.MONGODB__CONNECTION_STRING }}"
 
-          # Replace using awk (safe for special chars)
+          # Escape special characters for safe awk replacement
+          safe_mongo_uri=$(printf '%s' "$mongo_uri" | sed 's/[&/\]/\\&/g')
+
+          # Perform replacements (safe)
           awk -v r="$app_id" '{gsub(/__APP-ID__/, r)}1' "$file" > tmp && mv tmp "$file"
           awk -v r="$app_key" '{gsub(/__APP-KEY__/, r)}1' "$file" > tmp && mv tmp "$file"
           awk -v r="$api_key" '{gsub(/__API-KEY__/, r)}1' "$file" > tmp && mv tmp "$file"
-          awk -v r="$mongo_uri" '{gsub(/__CONNECTION-STRING__/, r)}1' "$file" > tmp && mv tmp "$file"
+          awk -v r="$safe_mongo_uri" '{gsub(/__CONNECTION-STRING__/, r)}1' "$file" > tmp && mv tmp "$file"
 
-          echo "✅ Replacements complete."
+          echo "✅ All placeholders replaced successfully."
           
       - name: Debug Mongo replacement (safe)
         run: |
