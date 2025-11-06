@@ -50,8 +50,8 @@ namespace RecipeApp.Services
             var mongodbSettings = configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>() ?? throw new ApplicationException("MongoDB connection string is not set");
             services.AddSingleton<IMongoClient>(sp =>
             {
-                var logger = sp.GetRequiredService<ILogger<MongoRecipeRepository>>();
-                logger.LogInformation($"Mongodb connection string {mongodbSettings.ConnectionString}");
+                //var logger = sp.GetRequiredService<ILogger<MongoRecipeRepository>>();
+                //logger.LogInformation($"Mongodb connection string {mongodbSettings.ConnectionString}");
                 return new MongoClient(mongodbSettings.ConnectionString);
             } );
             services.AddSingleton(sp => sp.GetRequiredService<IMongoClient>().GetDatabase(mongodbSettings.DatabaseName));
