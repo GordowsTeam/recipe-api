@@ -84,28 +84,37 @@ jobs:
             exit 1
           fi
 
-      - name: Replace settings in appsettings.json
+      - name: Replace settings in appsettings.json (safe JSON method)
         run: |
           file="$GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json"
 
-          echo "Starting placeholder replacements..."
+          echo "Starting placeholder replacements (jq method)..."
 
-          # Store secrets in variables
+          # Define secrets
           app_id="${{ secrets.EDAMAME_APP_ID }}"
           app_key="${{ secrets.EDAMAME_APP_KEY }}"
           api_key="${{ secrets.SPOONACULAR_API_KEY }}"
           mongo_uri="${{ secrets.MONGODB__CONNECTION_STRING }}"
 
-          # Escape special characters for safe awk replacement
-          safe_mongo_uri=$(printf '%s' "$mongo_uri" | sed 's/[&/\]/\\&/g')
+          # Use jq to safely update JSON keys
+          jq --arg appid "$app_id" \
+             --arg appkey "$app_key" \
+             --arg apikey "$api_key" \
+             --arg conn "$mongo_uri" \
+             '
+             walk(
+               if type == "string" then
+                 gsub("__APP-ID__"; $appid) |
+                 gsub("__APP-KEY__"; $appkey) |
+                 gsub("__API-KEY__"; $apikey) |
+                 gsub("__CONNECTION-STRING__"; $conn)
+               else
+                 .
+               end
+             )
+             ' "$file" > tmp.json && mv tmp.json "$file"
 
-          # Perform replacements (safe)
-          awk -v r="$app_id" '{gsub(/__APP-ID__/, r)}1' "$file" > tmp && mv tmp "$file"
-          awk -v r="$app_key" '{gsub(/__APP-KEY__/, r)}1' "$file" > tmp && mv tmp "$file"
-          awk -v r="$api_key" '{gsub(/__API-KEY__/, r)}1' "$file" > tmp && mv tmp "$file"
-          awk -v r="$safe_mongo_uri" '{gsub(/__CONNECTION-STRING__/, r)}1' "$file" > tmp && mv tmp "$file"
-
-          echo "✅ All placeholders replaced successfully."
+          echo "✅ All placeholders replaced successfully using jq."
           
       - name: Debug Mongo replacement (safe)
         run: |
