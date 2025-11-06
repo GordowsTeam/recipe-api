@@ -15,6 +15,7 @@ using OpenAI;
 using Recipe.Core.Enums;
 using Recipe.Core.Models;
 using MongoDB.Bson.Serialization.Options;
+using Microsoft.Extensions.Logging;
 
 namespace RecipeApp.Services
 {
