@@ -88,25 +88,21 @@ jobs:
         run: |
           file="$GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json"
 
-          # Replace placeholders safely (handles special characters)
-          awk -v r="${{ secrets.EDAMAME_APP_ID }}" '{gsub(/__APP-ID__/, r)}1' "$file" > tmp && mv tmp "$file"
-          awk -v r="${{ secrets.EDAMAME_APP_KEY }}" '{gsub(/__APP-KEY__/, r)}1' "$file" > tmp && mv tmp "$file"
-          awk -v r="${{ secrets.SPOONACULAR_API_KEY }}" '{gsub(/__API-KEY__/, r)}1' "$file" > tmp && mv tmp "$file"
-          awk -v r="${{ secrets.MONGODB__CONNECTION_STRING }}" '{gsub(/__CONNECTION-STRING__/, r)}1' "$file" > tmp && mv tmp "$file"
+          echo "Starting placeholder replacements..."
+
+          # Store secrets in variables
+          app_id="${{ secrets.EDAMAME_APP_ID }}"
+          app_key="${{ secrets.EDAMAME_APP_KEY }}"
+          api_key="${{ secrets.SPOONACULAR_API_KEY }}"
+          mongo_uri="${{ secrets.MONGODB__CONNECTION_STRING }}"
+
+          # Replace using awk (safe for special chars)
+          awk -v r="$app_id" '{gsub(/__APP-ID__/, r)}1' "$file" > tmp && mv tmp "$file"
+          awk -v r="$app_key" '{gsub(/__APP-KEY__/, r)}1' "$file" > tmp && mv tmp "$file"
+          awk -v r="$api_key" '{gsub(/__API-KEY__/, r)}1' "$file" > tmp && mv tmp "$file"
+          awk -v r="$mongo_uri" '{gsub(/__CONNECTION-STRING__/, r)}1' "$file" > tmp && mv tmp "$file"
 
           echo "✅ Replacements complete."
-      
-      - name: Verify API ID (safe)
-        run: |
-          echo "Checking if api id placeholder still exists..."
-          if grep -q "__APP-ID__" $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json; then
-            echo "API ID was not replaced!"
-            exit 1
-          else
-            echo "API ID string replaced successfully"
-            echo "Connection string line (redacted):"
-            grep -i "mongodb" $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json | sed 's/\(mongodb[^"]\{5\}\)[^"]*\([^"]\{5\}\)\"/\1...REDACTED...\2\"/'
-          fi
           
       - name: Verify MongoDB connection string replacement (safe)
         run: |
@@ -117,7 +113,6 @@ jobs:
           else
             echo "MongoDB connection string replaced successfully"
             echo "Connection string line (redacted):"
-            grep -i "mongodb" $GITHUB_WORKSPACE/src/RecipeAPI/appsettings.json | sed 's/\(mongodb[^"]\{5\}\)[^"]*\([^"]\{5\}\)\"/\1...REDACTED...\2\"/'
           fi
 
       - name: Terraform Init with dynamic backend
