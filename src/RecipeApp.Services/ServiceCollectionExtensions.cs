@@ -46,7 +46,12 @@ namespace RecipeApp.Services
                       BsonSerializer.LookupSerializer<RecipeTranslation>()));
             });
             var mongodbSettings = configuration.GetSection("MongoDBSettings").Get<MongoDBSettings>() ?? throw new ApplicationException("MongoDB connection string is not set");
-            services.AddSingleton<IMongoClient>(sp => new MongoClient(mongodbSettings.ConnectionString));
+            services.AddSingleton<IMongoClient>(sp =>
+            {
+                var logger = sp.GetRequiredService<ILogger>();
+                logger.LogInformation("Connecting to MongoDB at {ConnectionString}", mongodbSettings.ConnectionString);
+                return new MongoClient(mongodbSettings.ConnectionString);
+            } );
             services.AddSingleton(sp => sp.GetRequiredService<IMongoClient>().GetDatabase(mongodbSettings.DatabaseName));
             services.AddScoped<IRecipeRepository, MongoRecipeRepository>();
             services.AddScoped<IIngredientSearchPendingRepository, IngredientSearchPendingRepository>();
