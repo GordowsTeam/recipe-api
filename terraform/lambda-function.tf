@@ -11,7 +11,7 @@ resource "aws_lambda_function" "recipe-lambda-function" {
   environment {
     variables = {
       ASPNETCORE_ENVIRONMENT = "${var.environment_name}"
-      spoonacular_active = "true"
+      spoonacular_active = "false"
       internal_active = "true"
     }
   }
