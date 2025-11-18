@@ -1,9 +1,5 @@
 ﻿using AWS.Logger;
-using Recipe.Application.Interfaces;
-using Recipe.Application.Services;
-using Recipe.Infrastructure.Services;
-using Recipe.Infrastructure.Services.Edamame;
-using Recipe.Infrastructure.Services.Spoonacular;
+using RecipeApp.Services;
 
 namespace RecipeAPI;
 
@@ -18,47 +14,29 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddHttpClient<EdamameRecipeService>("EdamameAPI", client => 
-        {
-            client.Timeout = TimeSpan.FromSeconds(10);
-        });
-        services.AddLogging(logging =>
-        {
-            logging.AddAWSProvider(new AWSLoggerConfig
+        services.AddRecipeAppServices(Configuration)
+            .AddLogging(logging =>
             {
-                LogGroup = "recipe-logs",
-                Region = "us-east-1"//TODO: remove this hardcoded
-            });
-        });
+                logging.AddAWSProvider(new AWSLoggerConfig
+                {
+                    LogGroup = "recipe-logs",
+                    Region = "us-east-1"//TODO: remove this hardcoded
+                });
+            })
+            .AddCors(options =>
+            {
+                options.AddPolicy("ProdCorsPolicy", builder =>
+                    builder.WithOrigins("https://*.oursite.com", "https://*.anothersite.com")
+                        .SetIsOriginAllowedToAllowWildcardSubdomains()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
 
-        services.AddCors(options =>
-        {
-            options.AddPolicy("ProdCorsPolicy", builder =>
-                builder.WithOrigins("https://*.oursite.com", "https://*.anothersite.com")
-                    .SetIsOriginAllowedToAllowWildcardSubdomains()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader());
-
-            options.AddPolicy("NonProdCorsPolicy", builder =>
-                builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader());
-        });
-
-        services.AddScoped<MockRecipeRepository>();
-        services.AddScoped<EdamameRecipeService>();
-        services.AddScoped<SpoonacularRecipeService>();
-        services.AddScoped<IRecipeServiceFactory, RecipeServiceFactory>();
-        services.AddScoped<IRecipeSearchUseCase, RecipeSearchUseCase>();
-        services.AddScoped<IGetRecipeUseCase, GetRecipeUseCase>();
-
-        services.Configure<EdamameAPISettings>(Configuration.GetSection("EdamameAPISettings"));
-        services.AddSingleton<EdamameAPISettings>();
-
-        services.Configure<SpoonacularAPISettings>(Configuration.GetSection("SpoonacularAPISettings"));
-        services.AddSingleton<SpoonacularAPISettings>();
-        
-        services.AddControllers();
+                options.AddPolicy("NonProdCorsPolicy", builder =>
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            })
+            .AddControllers();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline

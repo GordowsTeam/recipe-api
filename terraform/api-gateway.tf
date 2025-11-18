@@ -27,6 +27,12 @@ resource "aws_api_gateway_resource" "values-resource" {
   path_part = "values"
 }
 
+resource "aws_api_gateway_resource" "recipe-id-resource" {
+  rest_api_id = aws_api_gateway_rest_api.recipe-api.id
+  parent_id   = aws_api_gateway_resource.recipe-resource.id
+  path_part   = "{id}"
+}
+
 ## Cognito Authorizer (if needed)
 resource "aws_api_gateway_authorizer" "cognito" {
   name          = "cognito-authorizer"
@@ -59,6 +65,20 @@ resource "aws_api_gateway_method" "values-get-method" {
   authorization = "NONE"
 }
 
+resource "aws_api_gateway_method" "recipe-get-method" {
+  rest_api_id   = aws_api_gateway_rest_api.recipe-api.id
+  resource_id   = aws_api_gateway_resource.recipe-id-resource.id
+  http_method   = "GET"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_method" "recipe-id-options" {
+  rest_api_id   = aws_api_gateway_rest_api.recipe-api.id
+  resource_id   = aws_api_gateway_resource.recipe-id-resource.id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
 ## Integrations with Lambda
 resource "aws_api_gateway_integration" "recipe-integration" {
   http_method = aws_api_gateway_method.recipe-post-method.http_method
@@ -68,6 +88,16 @@ resource "aws_api_gateway_integration" "recipe-integration" {
   type = "AWS_PROXY"
   uri = aws_lambda_function.recipe-lambda-function.invoke_arn
   timeout_milliseconds = 29000
+}
+
+resource "aws_api_gateway_integration" "recipe-get-integration" {
+  rest_api_id             = aws_api_gateway_rest_api.recipe-api.id
+  resource_id             = aws_api_gateway_resource.recipe-id-resource.id
+  http_method             = aws_api_gateway_method.recipe-get-method.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.recipe-lambda-function.invoke_arn
+  timeout_milliseconds    = 29000
 }
 
 resource "aws_api_gateway_integration" "recipe-options" {
@@ -86,6 +116,23 @@ EOF
   }
 }
 
+resource "aws_api_gateway_integration" "recipe-id-options" {
+  rest_api_id          = aws_api_gateway_rest_api.recipe-api.id
+  resource_id          = aws_api_gateway_resource.recipe-id-resource.id
+  http_method          = aws_api_gateway_method.recipe-id-options.http_method
+  type                 = "MOCK"
+  passthrough_behavior = "WHEN_NO_MATCH"
+
+  request_templates = {
+    "application/json" = <<EOF
+{
+  "statusCode": 200
+}
+EOF
+  }
+}
+
+## Integrations with Lambda Responses
 resource "aws_api_gateway_method_response" "recipe-options" {
   rest_api_id = aws_api_gateway_rest_api.recipe-api.id
   resource_id = aws_api_gateway_resource.recipe-resource.id
@@ -126,6 +173,36 @@ resource "aws_api_gateway_integration" "values-integration" {
   timeout_milliseconds = 29000
 }
 
+resource "aws_api_gateway_method_response" "recipe-id-options" {
+  rest_api_id = aws_api_gateway_rest_api.recipe-api.id
+  resource_id = aws_api_gateway_resource.recipe-id-resource.id
+  http_method = aws_api_gateway_method.recipe-id-options.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+    "method.response.header.Access-Control-Allow-Origin"  = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "recipe-id-options" {
+  rest_api_id = aws_api_gateway_rest_api.recipe-api.id
+  resource_id = aws_api_gateway_resource.recipe-id-resource.id
+  http_method = aws_api_gateway_method.recipe-id-options.http_method
+  status_code = aws_api_gateway_method_response.recipe-id-options.status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+    "method.response.header.Access-Control-Allow-Methods" = "'GET,POST,OPTIONS'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+  }
+
+  response_templates = {
+    "application/json" = ""
+  }
+}
+
 ## Deployoment
 resource "aws_api_gateway_deployment" "recipe-deployment" {
   rest_api_id = aws_api_gateway_rest_api.recipe-api.id
@@ -148,6 +225,16 @@ resource "aws_api_gateway_deployment" "recipe-deployment" {
       # GET /api/values
       aws_api_gateway_method.values-get-method.id,
       aws_api_gateway_integration.values-integration.id,
+
+      # GET /api/recipe/{id}
+      aws_api_gateway_method.recipe-get-method.id,
+      aws_api_gateway_integration.recipe-get-integration.id,
+
+      # OPTIONS /api/recipe/{id}
+      aws_api_gateway_method.recipe-id-options.id,
+      aws_api_gateway_method_response.recipe-id-options.id,
+      aws_api_gateway_integration.recipe-id-options.id,
+      aws_api_gateway_integration_response.recipe-id-options.id,
     ]))
   }
 

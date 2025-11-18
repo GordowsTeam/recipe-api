@@ -16,6 +16,6 @@
     <PackageReference Include="AWS.Logger.AspNetCore" Version="3.5.3" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Recipe.Infrastructure\Recipe.Infrastructure.csproj" />
+    <ProjectReference Include="..\RecipeApp.Services\RecipeApp.Services.csproj" />
   </ItemGroup>
 </Project>
