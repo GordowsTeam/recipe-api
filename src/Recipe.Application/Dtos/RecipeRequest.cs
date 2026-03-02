@@ -16,4 +16,7 @@ public class RecipeRequest
     public IEnumerable<string>? MealTypes { get; set; }
     public int NumberOfRecipes { get; set; } = 10;
     public Language Language { get; set; } = Language.Spanish;
+
+    /// <summary>When set, return the latest N recipes (by CreatedDateTime descending). Used for "latest recipes" endpoints.</summary>
+    public int? GetLatestCount { get; set; }
 }

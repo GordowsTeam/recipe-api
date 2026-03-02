@@ -1,4 +1,4 @@
-﻿using Recipe.Domain.Enums;
+using Recipe.Domain.Enums;
 
 namespace Recipe.Application.Dtos
 {
@@ -15,6 +15,10 @@ namespace Recipe.Application.Dtos
         public IEnumerable<string>? MealTypes { get; set; }
         public IEnumerable<Direction>? Directions { get; set; }
         public RecipeSourceType RecipeSourceType { get; set; }
+
+        public DateTime? CreatedDateTime { get; set; }
+        public DateTime? UpdatedDateTime { get; set; }
+        public int Ranked { get; set; }
     }
 
     public static class RecipeDetailResponseExtension

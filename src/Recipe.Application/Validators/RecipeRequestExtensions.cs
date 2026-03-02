@@ -1,4 +1,4 @@
-﻿using Recipe.Application.Dtos;
+using Recipe.Application.Dtos;
 
 namespace Recipe.Application.Validators
 {
@@ -10,6 +10,12 @@ namespace Recipe.Application.Validators
             {
                 errorMessage = "Request cannot be null.";
                 return false;
+            }
+
+            if (request.GetLatestCount.HasValue && request.GetLatestCount.Value > 0)
+            {
+                errorMessage = null;
+                return true;
             }
 
             if (!string.IsNullOrWhiteSpace(request.Name) ||
