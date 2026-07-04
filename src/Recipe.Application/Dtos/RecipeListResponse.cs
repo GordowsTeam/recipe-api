@@ -1,4 +1,4 @@
-﻿using Recipe.Domain.Enums;
+using Recipe.Domain.Enums;
 
 namespace Recipe.Application.Dtos;
 public class RecipeListResponse
@@ -7,4 +7,7 @@ public class RecipeListResponse
     public required string Name { get; set; }
     public IEnumerable<Image>? Images { get; set; }
     public RecipeSourceType RecipeSourceType { get; set; }
+    public DateTime? CreatedDateTime { get; set; }
+    public DateTime? UpdatedDateTime { get; set; }
+    public int Ranked { get; set; }
 }

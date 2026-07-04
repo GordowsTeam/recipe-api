@@ -1,4 +1,4 @@
-﻿using Recipe.Core.Enums;
+using Recipe.Core.Enums;
 using Recipe.Core.Models;
 using Recipe.Domain.Enums;
 
@@ -13,5 +13,14 @@ namespace Recipe.Domain.Models
         public RecipeSourceType RecipeSourceType { get; set; }
         public bool AIEnriched { get; set; }
         public Dictionary<Language, RecipeTranslation>? Translations { get; set; } = new();
+
+        /// <summary>When the recipe was first created (UTC).</summary>
+        public DateTime? CreatedDateTime { get; set; }
+
+        /// <summary>When the recipe was last updated (UTC).</summary>
+        public DateTime? UpdatedDateTime { get; set; }
+
+        /// <summary>Ranking/rating score (e.g. 1-5 or 0-100).</summary>
+        public int Ranked { get; set; }
     }
 }

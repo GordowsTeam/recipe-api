@@ -1,0 +1,481 @@
+{
+	"info": {
+		"_postman_id": "recipe-api-collection",
+		"name": "Recipe API",
+		"description": "Recipe API. Users are keyed by **email** (MongoDB `User.Id` = email). Send **`X-User-Email`** on every user-scoped call unless ASP.NET JWT Bearer middleware is enabled and populates the `email` claim. Optional: set collection variable **`bearerToken`** and use request **Authorization → Bearer Token** when your host validates JWTs. For **`GET /api/user/info`**, include **`X-Cognito-Username`** when you are not sending a token so new users get `displayName`.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000"
+		},
+		{
+			"key": "userEmail",
+			"value": "alberto.garcia.shared@gmail.com"
+		},
+		{
+			"key": "cognitoUsername",
+			"value": "Google_100043400658405947642"
+		},
+		{
+			"key": "bearerToken",
+			"value": "",
+			"description": "Optional Cognito id_token for hosts with JWT Bearer auth configured."
+		}
+	],
+	"item": [
+		{
+			"name": "User",
+			"description": "All routes use **`X-User-Email`** = signed-in user's email (same value as Cognito `email` in the id token). This replaces the old **`X-User-Id`** (Cognito `sub`) header.",
+			"item": [
+				{
+					"name": "Get current user (me)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-User-Email",
+								"value": "{{userEmail}}",
+								"type": "text",
+								"description": "User primary key (email)."
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/user/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "user", "me"]
+						},
+						"description": "Get the current user's profile from the database only. Returns 404 if the user has not been stored yet. Requires `X-User-Email` (or JWT with `email` claim when auth middleware is enabled)."
+					}
+				},
+				{
+					"name": "Get current user (info, get or create)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-User-Email",
+								"value": "{{userEmail}}",
+								"type": "text",
+								"description": "User key; optional if Bearer token includes email claim."
+							},
+							{
+								"key": "X-Cognito-Username",
+								"value": "{{cognitoUsername}}",
+								"type": "text",
+								"description": "Optional with JWT; maps to displayName when creating a new user."
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/user/info",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "user", "info"]
+						},
+						"description": "Get the current user's profile; if they do not exist, creates them. Identity is JWT `email` or `X-User-Email`. Display name from `cognito:username` or `X-Cognito-Username`."
+					}
+				},
+				{
+					"name": "Create or update user (me)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-User-Email",
+								"value": "{{userEmail}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"displayName\": \"My Display Name\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/user/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "user", "me"]
+						},
+						"description": "Create or update the current user's profile. The user row is keyed by `X-User-Email`; body fields update `email` / `displayName` in storage."
+					}
+				},
+				{
+					"name": "Add favorite",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-User-Email",
+								"value": "{{userEmail}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"recipeId\": \"recipe-id-here\",\n  \"recipeSourceType\": 2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/user/favorites",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "user", "favorites"]
+						},
+						"description": "Add a recipe to the current user's favorites. Requires `X-User-Email`. recipeSourceType: 0=None, 1=Mock, 2=Internal, 3=Edamame, 4=Spoonacular, 5=UserCreated."
+					}
+				}
+			]
+		},
+		{
+			"name": "Recipe",
+			"item": [
+				{
+					"name": "Get (test)",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/recipe",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "recipe"]
+						},
+						"description": "Simple test endpoint."
+					}
+				},
+				{
+					"name": "Get latest recipes",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/recipe/latest?count=5&language=Spanish",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "recipe", "latest"],
+							"query": [
+								{ "key": "count", "value": "5", "description": "1-100" },
+								{ "key": "language", "value": "Spanish", "description": "Spanish, English, None" }
+							]
+						},
+						"description": "Get latest recipes. language: Spanish (default), English, None."
+					}
+				},
+				{
+					"name": "Get recipe by id",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/recipe/:id?recipeSourceType=Internal&language=Spanish",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "recipe", ":id"],
+							"variable": [
+								{ "key": "id", "value": "recipe-id-here" }
+							],
+							"query": [
+								{ "key": "recipeSourceType", "value": "Internal", "description": "Internal, Edamame, Spoonacular, UserCreated, Mock, None" },
+								{ "key": "language", "value": "Spanish" }
+							]
+						},
+						"description": "Get a single recipe by id."
+					}
+				},
+				{
+					"name": "Search recipes",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ingredients\": [\"tomato\", \"onion\"],\n  \"matchAllIngredients\": false,\n  \"name\": null,\n  \"cuisineTypes\": null,\n  \"mealTypes\": null,\n  \"numberOfRecipes\": 10,\n  \"language\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/recipe",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "recipe"]
+						},
+						"description": "Search recipes by ingredients and filters. language: 0=None, 1=Spanish, 2=English."
+					}
+				},
+				{
+					"name": "Favorites",
+					"description": "Favorite lists are scoped by **`X-User-Email`** (user key = email).",
+					"item": [
+						{
+							"name": "Get favorites",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-User-Email",
+										"value": "{{userEmail}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/recipe/favorites",
+									"host": ["{{baseUrl}}"],
+									"path": ["api", "recipe", "favorites"]
+								},
+								"description": "Get current user's favorite recipes. Requires `X-User-Email`."
+							}
+						},
+						{
+							"name": "Add favorite",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "X-User-Email",
+										"value": "{{userEmail}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"recipeId\": \"recipe-id-here\",\n  \"recipeSourceType\": 2\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/recipe/favorites",
+									"host": ["{{baseUrl}}"],
+									"path": ["api", "recipe", "favorites"]
+								},
+								"description": "Add a recipe to favorites. Requires `X-User-Email`. recipeSourceType: 0=None, 1=Mock, 2=Internal, 3=Edamame, 4=Spoonacular, 5=UserCreated."
+							}
+						},
+						{
+							"name": "Remove favorite",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "X-User-Email",
+										"value": "{{userEmail}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/recipe/favorites/:recipeId",
+									"host": ["{{baseUrl}}"],
+									"path": ["api", "recipe", "favorites", ":recipeId"],
+									"variable": [
+										{ "key": "recipeId", "value": "recipe-id-here" }
+									]
+								},
+								"description": "Remove a recipe from favorites. Requires `X-User-Email`."
+							}
+						}
+					]
+				},
+				{
+					"name": "My recipes",
+					"description": "Saved and user-created recipes are scoped by **`X-User-Email`**.",
+					"item": [
+						{
+							"name": "Get my recipes",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-User-Email",
+										"value": "{{userEmail}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/recipe/my-recipes",
+									"host": ["{{baseUrl}}"],
+									"path": ["api", "recipe", "my-recipes"]
+								},
+								"description": "Get current user's saved recipes (my recipes list). Requires `X-User-Email`."
+							}
+						},
+						{
+							"name": "Add my recipe",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "X-User-Email",
+										"value": "{{userEmail}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"recipeId\": \"recipe-id-here\",\n  \"recipeSourceType\": 2\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/recipe/my-recipes",
+									"host": ["{{baseUrl}}"],
+									"path": ["api", "recipe", "my-recipes"]
+								},
+								"description": "Add an existing recipe to 'my recipes'. Requires `X-User-Email`."
+							}
+						},
+						{
+							"name": "Create user recipe",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "X-User-Email",
+										"value": "{{userEmail}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"My Homemade Recipe\",\n  \"description\": \"Optional description\",\n  \"ingredients\": [\"ingredient 1\", \"ingredient 2\"],\n  \"directions\": [\"Step 1\", \"Step 2\"],\n  \"totalTime\": 30,\n  \"calories\": 250\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/recipe/my-recipes/create",
+									"host": ["{{baseUrl}}"],
+									"path": ["api", "recipe", "my-recipes", "create"]
+								},
+								"description": "Create a new user-created recipe. Requires `X-User-Email`. Returns 201 with the created recipe."
+							}
+						},
+						{
+							"name": "Remove my recipe",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "X-User-Email",
+										"value": "{{userEmail}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/recipe/my-recipes/:recipeId",
+									"host": ["{{baseUrl}}"],
+									"path": ["api", "recipe", "my-recipes", ":recipeId"],
+									"variable": [
+										{ "key": "recipeId", "value": "recipe-id-here" }
+									]
+								},
+								"description": "Remove a recipe from my recipes. Requires `X-User-Email`."
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Values",
+			"item": [
+				{
+					"name": "Get values",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/values",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "values"]
+						}
+					}
+				},
+				{
+					"name": "Get value by id",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/values/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "values", ":id"],
+							"variable": [
+								{ "key": "id", "value": "1" }
+							]
+						}
+					}
+				},
+				{
+					"name": "Post value",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"value\""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/values",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "values"]
+						}
+					}
+				},
+				{
+					"name": "Put value",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"value\""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/values/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "values", ":id"],
+							"variable": [
+								{ "key": "id", "value": "1" }
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete value",
+					"request": {
+						"method": "DELETE",
+						"url": {
+							"raw": "{{baseUrl}}/api/values/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "values", ":id"],
+							"variable": [
+								{ "key": "id", "value": "1" }
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}

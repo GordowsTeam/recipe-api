@@ -6,5 +6,6 @@ public enum RecipeSourceType
     Mock,
     Internal,
     Edamame,
-    Spoonacular
+    Spoonacular,
+    UserCreated
 }

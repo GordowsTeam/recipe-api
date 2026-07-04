@@ -1,4 +1,4 @@
-﻿using MongoDB.Driver;
+using MongoDB.Driver;
 using Recipe.Application.Dtos;
 using Recipe.Application.Interfaces;
 
@@ -54,10 +54,29 @@ namespace Recipe.Infrastructure.MongoDBRepo
 
             var recipes = await _collection.Find(filter).ToListAsync();
             var distinctRecipes = recipes.GroupBy(r => r.Id).Select(g => g.First()).ToList();
-            
+
             return distinctRecipes;
         }
 
-        public async Task InsertRecipeAsync(Domain.Models.Recipe recipe) => await _collection.InsertOneAsync(recipe);
+        public async Task<IEnumerable<Domain.Models.Recipe>> GetLatestRecipesAsync(int count)
+        {
+            var sort = Builders<Domain.Models.Recipe>.Sort.Descending(r => r.CreatedDateTime);
+            var cursor = await _collection
+                .Find(FilterDefinition<Domain.Models.Recipe>.Empty)
+                .Sort(sort)
+                .Limit(Math.Max(1, Math.Min(count, 100)))
+                .ToListAsync();
+            return cursor;
+        }
+
+        public async Task InsertRecipeAsync(Domain.Models.Recipe recipe)
+        {
+            var now = DateTime.UtcNow;
+            if (!recipe.CreatedDateTime.HasValue)
+                recipe.CreatedDateTime = now;
+            if (!recipe.UpdatedDateTime.HasValue)
+                recipe.UpdatedDateTime = now;
+            await _collection.InsertOneAsync(recipe);
+        }
     }
 }
