@@ -1,4 +1,4 @@
-﻿using MongoDB.Driver;
+using MongoDB.Driver;
 using Recipe.Application.Dtos;
 using Recipe.Application.Interfaces;
 using Recipe.Application.Validators;
@@ -32,19 +32,31 @@ namespace Recipe.Infrastructure.Services
 
         public async Task<IEnumerable<RecipeListResponse>?> GetRecipesAsync(RecipeRequest request)
         {
-            if(!request.IsValid(out var errorMessage))
+            if (!request.IsValid(out var errorMessage))
                 throw new ArgumentException(errorMessage);
 
-            var recipes = await _recipeRepository.GetRecipesAsync(request);
+            IEnumerable<Domain.Models.Recipe>? recipes;
+            if (request.GetLatestCount.HasValue && request.GetLatestCount.Value > 0)
+            {
+                var count = Math.Min(request.GetLatestCount.Value, 100);
+                recipes = await _recipeRepository.GetLatestRecipesAsync(count);
+            }
+            else
+            {
+                recipes = await _recipeRepository.GetRecipesAsync(request);
+            }
 
             var recipeResponseList = recipes?.Select(r => new RecipeListResponse
             {
                 Id = r.Id.ToString(),
                 Name = GetName(r, request.Language) ?? string.Empty,
                 Images = r.Images?.Select(i => new Image { Url = i.Url, Main = i.Main }) ?? [],
-                RecipeSourceType = r.RecipeSourceType
+                RecipeSourceType = r.RecipeSourceType,
+                CreatedDateTime = r.CreatedDateTime,
+                UpdatedDateTime = r.UpdatedDateTime,
+                Ranked = r.Ranked
             });
-            
+
             return recipeResponseList?.Where(r => !string.IsNullOrEmpty(r.Name));
         }
 
@@ -97,8 +109,10 @@ namespace Recipe.Infrastructure.Services
                 }).ToList() ?? [],
                 Calories = recipe.Calories,
                 TotalTime = recipe.TotalTime,
-                
-                RecipeSourceType = recipe.RecipeSourceType
+                RecipeSourceType = recipe.RecipeSourceType,
+                CreatedDateTime = recipe.CreatedDateTime,
+                UpdatedDateTime = recipe.UpdatedDateTime,
+                Ranked = recipe.Ranked
             };
         }
 
