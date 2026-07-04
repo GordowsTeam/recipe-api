@@ -56,6 +56,10 @@ namespace RecipeApp.Services
             } );
             services.AddSingleton(sp => sp.GetRequiredService<IMongoClient>().GetDatabase(mongodbSettings.DatabaseName));
             services.AddScoped<IRecipeRepository, MongoRecipeRepository>();
+            services.AddScoped<IUserRecipeRepository, UserRecipeRepository>();
+            services.AddScoped<IFavoriteRecipeRepository, FavoriteRecipeRepository>();
+            services.AddScoped<IUserCreatedRecipeRepository, UserCreatedRecipeRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IIngredientSearchPendingRepository, IngredientSearchPendingRepository>();
 
             //AI services
@@ -83,6 +87,17 @@ namespace RecipeApp.Services
             services.AddScoped<IRecipeSearchUseCase, RecipeSearchUseCase>();
             services.AddScoped<IRecipeETLService, RecipeETLService>();
             services.AddScoped<IGetRecipeUseCase, GetRecipeUseCase>();
+            services.AddScoped<IGetMyRecipesUseCase, GetMyRecipesUseCase>();
+            services.AddScoped<IAddMyRecipeUseCase, AddMyRecipeUseCase>();
+            services.AddScoped<IRemoveMyRecipeUseCase, RemoveMyRecipeUseCase>();
+            services.AddScoped<ICreateUserRecipeUseCase, CreateUserRecipeUseCase>();
+            services.AddScoped<IGetFavoriteRecipesUseCase, GetFavoriteRecipesUseCase>();
+            services.AddScoped<IAddFavoriteRecipeUseCase, AddFavoriteRecipeUseCase>();
+            services.AddScoped<IRemoveFavoriteRecipeUseCase, RemoveFavoriteRecipeUseCase>();
+            services.AddScoped<IGetUserUseCase, GetUserUseCase>();
+            services.AddScoped<IGetOrCreateUserUseCase, GetOrCreateUserUseCase>();
+            services.AddScoped<IUpsertUserUseCase, UpsertUserUseCase>();
+            services.AddScoped<UserCreatedRecipeService>();
             services.AddScoped<IDuplicateFinder, DuplicateFinder>();
             services.AddScoped<IIngredientSearchPendingService, IngredientSearchPendingService>();
             services.AddScoped<IIngredientService, IngredientService>();

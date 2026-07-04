@@ -1,4 +1,6 @@
-﻿using AWS.Logger;
+using AWS.Logger;
+using Recipe.Application.Interfaces;
+using RecipeAPI.Services;
 using RecipeApp.Services;
 
 namespace RecipeAPI;
@@ -14,6 +16,8 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddRecipeAppServices(Configuration)
             .AddLogging(logging =>
             {
