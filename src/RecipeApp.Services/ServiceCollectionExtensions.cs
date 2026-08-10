@@ -61,6 +61,8 @@ namespace RecipeApp.Services
             services.AddScoped<IUserCreatedRecipeRepository, UserCreatedRecipeRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IIngredientSearchPendingRepository, IngredientSearchPendingRepository>();
+            services.AddScoped<IIngredientRepository, IngredientRepository>();
+            services.AddScoped<IIngredientInstanceRepository, IngredientInstanceRepository>();
 
             //AI services
             services.AddScoped<IAIEnricher, AIEnricher>();
@@ -101,6 +103,8 @@ namespace RecipeApp.Services
             services.AddScoped<IDuplicateFinder, DuplicateFinder>();
             services.AddScoped<IIngredientSearchPendingService, IngredientSearchPendingService>();
             services.AddScoped<IIngredientService, IngredientService>();
+            services.AddScoped<IIngredientCatalogService, IngredientCatalogService>();
+            services.AddScoped<IIngredientInstanceService, IngredientInstanceService>();
 
             return services;//for chaining the services builder.Services.AddRecipeAppServices(mongoConnection, dbName).AddControllers().AddSwaggerGen();
         }

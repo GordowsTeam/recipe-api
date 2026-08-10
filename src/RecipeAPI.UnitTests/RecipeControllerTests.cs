@@ -28,7 +28,17 @@ namespace RecipeAPI.UnitTests
             _loggerMock = new Mock<ILogger<RecipeController>>();
             _recipeSearchUseCaseMock = new Mock<IRecipeSearchUseCase>();
             _getRecipeUseCaseMock = new Mock<IGetRecipeUseCase>();
-            _recipeController = new RecipeController(_recipeSearchUseCaseMock.Object, _getRecipeUseCaseMock.Object, _loggerMock.Object);
+            _recipeController = new RecipeController(
+                _recipeSearchUseCaseMock.Object,
+                _getRecipeUseCaseMock.Object,
+                new Mock<IGetMyRecipesUseCase>().Object,
+                new Mock<IAddMyRecipeUseCase>().Object,
+                new Mock<IRemoveMyRecipeUseCase>().Object,
+                new Mock<ICreateUserRecipeUseCase>().Object,
+                new Mock<IGetFavoriteRecipesUseCase>().Object,
+                new Mock<IAddFavoriteRecipeUseCase>().Object,
+                new Mock<IRemoveFavoriteRecipeUseCase>().Object,
+                _loggerMock.Object);
         }
 
         [Fact]
