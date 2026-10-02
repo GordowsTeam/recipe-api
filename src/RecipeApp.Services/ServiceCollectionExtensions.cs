@@ -60,6 +60,7 @@ namespace RecipeApp.Services
             services.AddScoped<IFavoriteRecipeRepository, FavoriteRecipeRepository>();
             services.AddScoped<IUserCreatedRecipeRepository, UserCreatedRecipeRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             services.AddScoped<IIngredientSearchPendingRepository, IngredientSearchPendingRepository>();
             services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IIngredientInstanceRepository, IngredientInstanceRepository>();
@@ -67,6 +68,7 @@ namespace RecipeApp.Services
             //AI services
             services.AddScoped<IAIEnricher, AIEnricher>();
             services.AddScoped<IRecipeTranslationService, RecipeTranslationService>();
+            services.AddScoped<IIngredientEnricher, IngredientEnricherService>();
             var openAISettings = configuration.GetSection("OpenAISettings").Get<OpenAISettings>() ?? throw new ApplicationException("OpenAI APIKey is not set");
             services.AddSingleton(sp => 
             {
@@ -99,6 +101,7 @@ namespace RecipeApp.Services
             services.AddScoped<IGetUserUseCase, GetUserUseCase>();
             services.AddScoped<IGetOrCreateUserUseCase, GetOrCreateUserUseCase>();
             services.AddScoped<IUpsertUserUseCase, UpsertUserUseCase>();
+            services.AddScoped<IUserRoleCatalogService, UserRoleCatalogService>();
             services.AddScoped<UserCreatedRecipeService>();
             services.AddScoped<IDuplicateFinder, DuplicateFinder>();
             services.AddScoped<IIngredientSearchPendingService, IngredientSearchPendingService>();

@@ -8,6 +8,8 @@ public class User
     public string? Email { get; set; }
     public string? DisplayName { get; set; }
 
+    public List<Guid> UserRoleIds { get; set; } = new();
+
     public DateTime? CreatedDateTime { get; set; }
     public DateTime? UpdatedDateTime { get; set; }
 }

@@ -1,28 +1,21 @@
 using Recipe.Application.Dtos;
+using Recipe.Application.Helpers;
 using Recipe.Application.Interfaces;
-using Recipe.Domain.Models;
 
 namespace Recipe.Application.Services;
 
-public class GetUserUseCase(IUserRepository userRepository) : IGetUserUseCase
+public class GetUserUseCase(IUserRepository userRepository, IUserRoleRepository userRoleRepository) : IGetUserUseCase
 {
     private readonly IUserRepository _userRepository = userRepository;
+    private readonly IUserRoleRepository _userRoleRepository = userRoleRepository;
 
     public async Task<UserResponse?> ExecuteAsync(string userId, CancellationToken ct = default)
     {
         var user = await _userRepository.GetByIdAsync(userId, ct);
-        return user == null ? null : ToResponse(user);
-    }
+        if (user == null)
+            return null;
 
-    private static UserResponse ToResponse(User user)
-    {
-        return new UserResponse
-        {
-            Id = user.Id,
-            Email = user.Email,
-            DisplayName = user.DisplayName,
-            CreatedDateTime = user.CreatedDateTime,
-            UpdatedDateTime = user.UpdatedDateTime
-        };
+        var userRoles = await _userRoleRepository.GetByIdsAsync(user.UserRoleIds, ct);
+        return UserResponseMapper.ToResponse(user, userRoles);
     }
 }

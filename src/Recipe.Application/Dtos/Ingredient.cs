@@ -4,7 +4,8 @@ namespace Recipe.Application.Dtos;
 
 public class Ingredient
 {
-    public Guid? GlobalIngredientId { get; set; }  // reference to global ingredient that contains the metadata
+    /// <summary>Reference to the ingredient catalog entry (Recipe.Domain.Models.Inventory.Ingredient.Id).</summary>
+    public Guid? IngredientId { get; set; }
     public string? Text { get; set; }//TODO: Change for Name
     public decimal Quantity { get; set; }
     public string? Measure { get; set; }

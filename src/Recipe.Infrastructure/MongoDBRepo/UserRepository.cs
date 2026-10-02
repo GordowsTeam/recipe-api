@@ -49,6 +49,7 @@ public class UserRepository : IUserRepository
             Id = user.Id,
             Email = user.Email,
             DisplayName = user.DisplayName,
+            UserRoleIds = user.UserRoleIds,
             CreatedDateTime = user.CreatedDateTime,
             UpdatedDateTime = user.UpdatedDateTime
         };
@@ -61,6 +62,7 @@ public class UserRepository : IUserRepository
             Id = doc.Id,
             Email = doc.Email,
             DisplayName = doc.DisplayName,
+            UserRoleIds = doc.UserRoleIds,
             CreatedDateTime = doc.CreatedDateTime,
             UpdatedDateTime = doc.UpdatedDateTime
         };

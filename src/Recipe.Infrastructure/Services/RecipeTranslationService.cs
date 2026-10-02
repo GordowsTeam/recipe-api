@@ -22,7 +22,17 @@ namespace Recipe.Infrastructure.Services
 
             var userPrompt = JsonSerializer.Serialize(recipe);
 
-            var resultText = await _chatModel.GetChatCompletionAsync(systemPrompt, userPrompt);
+            string resultText;
+            try
+            {
+                resultText = await _chatModel.GetChatCompletionAsync(systemPrompt, userPrompt);
+            }
+            catch (Exception ex)
+            {
+                // Translation is best-effort: the recipe is still saved with its original language data.
+                Console.WriteLine($"[RecipeTranslationService] Could not translate recipe '{recipe.Id}': {ex.Message}");
+                return null;
+            }
 
             if (string.IsNullOrWhiteSpace(resultText))
                 return null;

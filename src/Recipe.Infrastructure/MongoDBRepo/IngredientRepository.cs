@@ -19,6 +19,14 @@ public class IngredientRepository : IIngredientRepository
         return await _collection.Find(i => i.Id == id).FirstOrDefaultAsync(ct);
     }
 
+    public async Task<Ingredient?> GetByNameAsync(string name, CancellationToken ct = default)
+    {
+        var filter = Builders<Ingredient>.Filter.Regex(
+            i => i.Name,
+            new MongoDB.Bson.BsonRegularExpression($"^{System.Text.RegularExpressions.Regex.Escape(name)}$", "i"));
+        return await _collection.Find(filter).FirstOrDefaultAsync(ct);
+    }
+
     public async Task<IReadOnlyList<Ingredient>> GetAllAsync(CancellationToken ct = default)
     {
         var cursor = await _collection.Find(FilterDefinition<Ingredient>.Empty).ToCursorAsync(ct);

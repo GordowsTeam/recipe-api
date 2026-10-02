@@ -39,7 +39,7 @@ namespace Recipe.Application.Dtos
                             CuisinTypes = recipeDetailResponse.CuisinTypes,
                             MealTypes = recipeDetailResponse.MealTypes,
                             Directions = recipeDetailResponse.Directions?.Select(d => d.ToDirection()),
-                            Ingredients = recipeDetailResponse.Ingredients?.Select(i => i.ToIngredient())
+                            Ingredients = recipeDetailResponse.Ingredients?.Select(i => i.ToIngredient()).ToList()
                         }
                     }
                 },
@@ -73,9 +73,12 @@ namespace Recipe.Application.Dtos
         {
             return new Domain.Models.Ingredient
             {
+                IngredientId = ingredient.IngredientId,
                 Name = ingredient.Text,
                 Quantity = ingredient.Quantity,
                 Measure = ingredient.Measure,
+                Weight = ingredient.Weight,
+                FoodCategory = ingredient.FoodCategory,
                 Image = ingredient.Image
             };
         }

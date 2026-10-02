@@ -92,6 +92,7 @@ namespace Recipe.Infrastructure.Services
                 Name = recipeTranslation.Name,
                 Ingredients = recipeTranslation.Ingredients?.Select(i => new Ingredient
                 {
+                    IngredientId = i.IngredientId,
                     Text = i.Name,
                     Quantity = i.Quantity,
                     Measure = i.Measure,

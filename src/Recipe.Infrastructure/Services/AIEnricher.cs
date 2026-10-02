@@ -35,7 +35,17 @@ Enrich the following recipe data by:
 
 Recipe to enrich: {rawRecipe}";
 
-            var resultText = await _chatModel.GetChatCompletionAsync(systemPrompt, userPrompt);
+            string resultText;
+            try
+            {
+                resultText = await _chatModel.GetChatCompletionAsync(systemPrompt, userPrompt);
+            }
+            catch (Exception ex)
+            {
+                // AI enrichment is best-effort: keep the original recipe data and move on.
+                Console.WriteLine($"[AIEnricher] Could not enrich recipe '{recipe.Id}': {ex.Message}");
+                return recipe;
+            }
 
             if(string.IsNullOrWhiteSpace(resultText))
                 return recipe;

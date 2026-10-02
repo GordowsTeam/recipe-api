@@ -5,6 +5,9 @@ namespace Recipe.Application.Interfaces;
 public interface IIngredientRepository
 {
     Task<Ingredient?> GetByIdAsync(Guid id, CancellationToken ct = default);
+
+    /// <summary>Case-insensitive exact-name lookup.</summary>
+    Task<Ingredient?> GetByNameAsync(string name, CancellationToken ct = default);
     Task<IReadOnlyList<Ingredient>> GetAllAsync(CancellationToken ct = default);
     Task<Ingredient> CreateAsync(Ingredient ingredient, CancellationToken ct = default);
     Task<Ingredient?> UpdateAsync(Ingredient ingredient, CancellationToken ct = default);
